@@ -28,14 +28,14 @@ export const errorMiddleware = (err, req, res, next) => {
 
         res.status(error.statusCode || 500).json({
             success: false,
-            error: error.message || 'Internal Server Error',
+            message: error.message || 'Internal Server Error',
         });
     }
     catch(e){
         console.error('Error in [error middleware]:', e);
         res.status(500).json({
             success: false,
-            error: 'Server Error',
+            message: 'Server Error',
         });
     }
 };
