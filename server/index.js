@@ -3,6 +3,7 @@ import cors from 'cors'
 import { connectToDB } from './database/mongodb.js'
 import { PORT, NODE_ENV } from './config/env.js'
 import { authRouter } from './routes/auth.routes.js'
+import { errorMiddleware } from './middlewares/error.middlewares.js'
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.urlencoded({ extended: false })); // Middleware to parse URL-enc
 
 app.use('/api/auth', authRouter);
 
+app.use(errorMiddleware);
 
 app.get('/', (req, res) => {
     res.send('Welcome to NodeNotion api')
