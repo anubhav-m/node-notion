@@ -31,10 +31,12 @@ export default function Header() {
                     <FaMoon />
                 </Button>
 
-                <Link to='/sign-in'>
-                    <Button className='bg-gradient-to-br from-purple-600 to-blue-500 text-white hover:bg-gradient-to-bl focus:ring-blue-300 dark:focus:ring-blue-800'>
-                        Sign In
-                    </Button>
+                <Link to='/sign-up'>
+                    <button className='btn-outline-wrapper group'>
+                        <span className='btn-outline group-hover:bg-transparent'>
+                            Sign In
+                        </span>
+                    </button>
                 </Link>
 
                 <NavbarToggle/>
