@@ -59,7 +59,7 @@ export default function SignUp() {
     }
 
     return (
-        <div className="min-h-screen mt-20">
+        <div className="flex-1 mt-20">
             <div className="flex flex-col md:flex-row gap-10 p-6 max-w-3xl mx-auto md:items-center">
                 {/* left */}
                 <div className="flex-1">
@@ -86,6 +86,7 @@ export default function SignUp() {
                                 id='username'
                                 value={formData.username}
                                 onChange={handleChange}
+                                color={errorMessage?'warning':'gray'}
                             />
                         </div>
 
@@ -97,6 +98,7 @@ export default function SignUp() {
                                 id='email'
                                 value={formData.email}
                                 onChange={handleChange}
+                                color={errorMessage?'warning':'gray'}
                             />
                         </div>
 
@@ -108,6 +110,7 @@ export default function SignUp() {
                                 id='password'
                                 value={formData.password}
                                 onChange={handleChange}
+                                color={errorMessage?'warning':'gray'}
                             />
                         </div>
 

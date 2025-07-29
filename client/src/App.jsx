@@ -6,19 +6,23 @@ import SignIn from './pages/SignIn.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Projects from './pages/Projects.jsx'
 import Header from './components/Header.jsx'
+import Footer from './components/Footer.jsx'
 
 export default function App() {
 	return (
 		<BrowserRouter>
-			<Header/>
-			<Routes>
-				<Route path='/' element={<Home />}></Route>
-				<Route path='/about' element={<About />}></Route>
-				<Route path='/sign-up' element={<SignUp />}></Route>
-				<Route path='/sign-in' element={<SignIn />}></Route>
-				<Route path='/dashboard' element={<Dashboard />}></Route>
-				<Route path='/projects' element={<Projects />}></Route>
-			</Routes>
+			<div className="min-h-screen flex flex-col">
+				<Header />
+				<Routes >
+					<Route path='/' element={<Home />}></Route>
+					<Route path='/about' element={<About />}></Route>
+					<Route path='/sign-up' element={<SignUp />}></Route>
+					<Route path='/sign-in' element={<SignIn />}></Route>
+					<Route path='/dashboard' element={<Dashboard />}></Route>
+					<Route path='/projects' element={<Projects />}></Route>
+				</Routes>
+				<Footer />
+			</div>
 		</BrowserRouter>
 	)
 }
