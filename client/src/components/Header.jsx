@@ -31,7 +31,7 @@ export default function Header() {
                     <FaMoon />
                 </Button>
 
-                <Link to='/sign-up'>
+                <Link to='/sign-in'>
                     <button className='btn-outline-wrapper group'>
                         <span className='btn-outline group-hover:bg-transparent'>
                             Sign In

@@ -83,10 +83,13 @@ export const SignIn = async (req, res, next) => {
         const token = jwt.sign(
             { id: validUser._id }, JWT_SECRET, { expiresIn: '1d' }
         );
+        
+        const { password: pass, ...rest } = validUser._doc;
 
         res.status(200).cookie('access_token', token, { httpOnly: true }).json({
             success: true,
-            message: 'User signed in successfully'
+            message: 'User signed in successfully',
+            user: rest
         });
     }
 
