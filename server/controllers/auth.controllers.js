@@ -40,12 +40,12 @@ export const SignUp = async (req, res, next) => {
         if (err.code === 11000) {
             const duplicateField = Object.keys(err.keyPattern)[0];
 
-            if (duplicateField === 'username'){
+            if (duplicateField === 'username') {
                 const usernameError = errorSetter(400, `${username} - Username not available`);
                 next(usernameError);
             }
 
-            else if (duplicateField === 'email'){
+            else if (duplicateField === 'email') {
                 const emailError = errorSetter(400, `${email} is already registered`);
                 next(emailError);
             }
@@ -83,7 +83,7 @@ export const SignIn = async (req, res, next) => {
         const token = jwt.sign(
             { id: validUser._id }, JWT_SECRET, { expiresIn: '1d' }
         );
-        
+
         const { password: pass, ...rest } = validUser._doc;
 
         res.status(200).cookie('access_token', token, { httpOnly: true }).json({
@@ -97,3 +97,43 @@ export const SignIn = async (req, res, next) => {
         next(err);
     }
 }
+
+export const Google = async (req, res, next) => {
+    const { email, name, googlePhotoUrl } = req.body;
+    try {
+        const user = await User.findOne({ email });
+
+        if (user) {
+            const token = jwt.sign({ id: user._id }, JWT_SECRET);
+            const { password, ...rest } = user._doc;
+            res.status(200).cookie('access_token', token, { httpOnly: true }).json({
+                success: true,
+                message: 'User signed in successfully',
+                user: rest
+            });
+        }
+
+        else{
+            const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+            const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+            const newUser = new User({
+                username: name.toLowerCase().split(' ').join('') + Math.random().toString(9).slice(-4),
+                email,
+                password: hashedPassword,
+                profilePic: googlePhotoUrl
+            });
+            await newUser.save();
+            const token = jwt.sign({ id: newUser._id }, JWT_SECRET);
+            const { password, ...rest } = newUser._doc;
+            res.status(201).cookie('access_token', token, { httpOnly: true }).json({
+                success: true,
+                message: 'User signed in successfully',
+                user: rest
+            });
+        }
+    }
+
+    catch (err) {
+        next(err);
+    }
+}   

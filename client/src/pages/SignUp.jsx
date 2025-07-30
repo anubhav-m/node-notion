@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from "react-router-dom"
 import { Label, TextInput, Button, Alert, Spinner } from "flowbite-react"
+import OAuth from '../components/OAuth.jsx'
 
 export default function SignUp() {
     const [formData, setFormData] = useState({
@@ -42,7 +43,7 @@ export default function SignUp() {
                 return setErrorMessage(data.message);
             }
 
-            if (res.ok){
+            if (res.ok) {
                 navigate('/sign-in');
             }
 
@@ -86,7 +87,7 @@ export default function SignUp() {
                                 id='username'
                                 value={formData.username}
                                 onChange={handleChange}
-                                color={errorMessage?'warning':'gray'}
+                                color={errorMessage ? 'warning' : 'gray'}
                             />
                         </div>
 
@@ -98,7 +99,7 @@ export default function SignUp() {
                                 id='email'
                                 value={formData.email}
                                 onChange={handleChange}
-                                color={errorMessage?'warning':'gray'}
+                                color={errorMessage ? 'warning' : 'gray'}
                             />
                         </div>
 
@@ -110,7 +111,7 @@ export default function SignUp() {
                                 id='password'
                                 value={formData.password}
                                 onChange={handleChange}
-                                color={errorMessage?'warning':'gray'}
+                                color={errorMessage ? 'warning' : 'gray'}
                             />
                         </div>
 
@@ -127,6 +128,9 @@ export default function SignUp() {
                                 ) : 'Sign Up'
                             }
                         </Button>
+
+                        <OAuth />
+
                     </form>
 
                     <div className="flex gap-2 text-sm mt-5">
