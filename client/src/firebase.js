@@ -4,14 +4,13 @@ import { initializeApp } from "firebase/app";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: "node-notion.firebaseapp.com",
-  projectId: "node-notion",
-  storageBucket: "node-notion.firebasestorage.app",
-  messagingSenderId: "934180768549",
-  appId: "1:934180768549:web:cc151c80c78663ec4d68cc"
+  authDomain: "node-notion-abe74.firebaseapp.com",
+  projectId: "node-notion-abe74",
+  storageBucket: "node-notion-abe74.firebasestorage.app",
+  messagingSenderId: "156513858592",
+  appId: "1:156513858592:web:91f39bc21d611b6a9ef845"
 };
 
 // Initialize Firebase
