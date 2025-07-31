@@ -1,11 +1,12 @@
 import { Link, useLocation } from 'react-router-dom'
-import { Navbar, NavbarCollapse, NavbarLink, TextInput, Button, NavbarToggle } from 'flowbite-react'
+import { Navbar, NavbarCollapse, NavbarLink, TextInput, Button, NavbarToggle, Dropdown, Avatar, DropdownHeader, DropdownItem, DropdownDivider } from 'flowbite-react'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { FaMoon } from 'react-icons/fa'
-
+import { useSelector } from 'react-redux'
 
 export default function Header() {
     const path = useLocation().pathname;
+    const { currentUser } = useSelector(state => state.user);
     return (
         <Navbar>
             <Link to='/' className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'>
@@ -31,19 +32,61 @@ export default function Header() {
                     <FaMoon />
                 </Button>
 
-                <Link to='/sign-in'>
-                    <button className='btn-outline-wrapper group'>
-                        <span className='btn-outline group-hover:bg-transparent'>
-                            Sign In
-                        </span>
-                    </button>
-                </Link>
+                {currentUser ?
+                    (
+                        <Dropdown
+                            arrowIcon={false}
+                            inline
+                            label={
+                                <Avatar
+                                    alt='user'
+                                    img={currentUser.profilePic}
+                                    rounded
+                                />
+                            }
+                        >
+                            <DropdownHeader>
+                                <span className='block text-sm'>
+                                    @{currentUser.username}
+                                </span>
 
-                <NavbarToggle/>
+                                <span className='block text-sm font-medium truncate'>
+                                    {currentUser.email}
+                                </span>
+
+                                <DropdownDivider />
+
+                                <Link to='/dashboard?tab=profile'>
+                                    <DropdownItem>
+                                        Profile
+                                    </DropdownItem>
+                                </Link>
+
+                                <DropdownDivider />
+
+                                <DropdownItem>
+                                    Sign Out
+                                </DropdownItem>
+                            </DropdownHeader>
+                        </Dropdown>
+                    )
+                    :
+                    (
+                        <Link to='/sign-in'>
+                            <button className='btn-outline-wrapper group'>
+                                <span className='btn-outline group-hover:bg-transparent'>
+                                    Sign In
+                                </span>
+                            </button>
+                        </Link>
+                    )
+
+                }
+                <NavbarToggle />
 
             </div>
 
-            
+
 
             <NavbarCollapse>
                 <NavbarLink active={path === "/"} as={Link} to='/'>
