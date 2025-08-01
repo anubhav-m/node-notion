@@ -1,5 +1,5 @@
 export default function About() {
     return (
-        <div>About</div>
+        <div className="flex-1">About</div>
     )
 }

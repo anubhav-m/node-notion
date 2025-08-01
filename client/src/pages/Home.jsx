@@ -1,5 +1,5 @@
 export default function Home() {
     return (
-        <div>Home</div>
+        <div className="flex-1">Home</div>
     )
 }
