@@ -100,7 +100,7 @@ export default function SignIn() {
                             />
                         </div>
 
-                        <Button className='bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:bg-gradient-to-l focus:ring-purple-200 dark:focus:ring-purple-800'
+                        <Button className='bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:bg-gradient-to-l focus:ring-purple-200 dark:focus:ring-purple-800 cursor-pointer'
                             type='submit'
                             disabled={loading}
                             onSubmit={handleSubmit}
