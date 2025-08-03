@@ -4,12 +4,36 @@ import { AiOutlineSearch } from 'react-icons/ai'
 import { FaMoon, FaSun } from 'react-icons/fa'
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleTheme } from '../redux/theme/themeSlice'
+import { signOutStart, signOutSuccess, signOutFailure } from '../redux/user/userSlice';
 
 export default function Header() {
     const path = useLocation().pathname;
     const { currentUser } = useSelector(state => state.user);
     const { theme } = useSelector(state => state.theme);
     const dispatch = useDispatch();
+
+    const handleSignOut = async () => {
+        try {
+            dispatch(signOutStart());
+            const res = await fetch('/api/user/signout', {
+                method: 'POST',
+                'Content-Type': 'application/json'
+            })
+
+            if (!res.ok) {
+                dispatch(signOutFailure());
+            }
+
+            else {
+                dispatch(signOutSuccess());
+            }
+        }
+
+        catch (error) {
+            dispatch(signOutFailure());
+        }
+    }
+
     return (
         <Navbar>
             <Link to='/' className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'>
@@ -33,7 +57,7 @@ export default function Header() {
             <div className='flex gap-2 md:order-1'>
                 <Button className='w-14 h-10 hidden sm:inline cursor-pointer' color="light" pill onClick={() => dispatch(toggleTheme())}>
                     {
-                        theme === 'light' ? <FaSun/> : <FaMoon/>
+                        theme === 'light' ? <FaSun /> : <FaMoon />
                     }
                 </Button>
 
@@ -70,7 +94,7 @@ export default function Header() {
 
                                 <DropdownDivider />
 
-                                <DropdownItem>
+                                <DropdownItem onClick={handleSignOut}>
                                     Sign Out
                                 </DropdownItem>
                             </DropdownHeader>

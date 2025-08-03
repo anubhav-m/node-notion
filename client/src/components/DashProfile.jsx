@@ -1,7 +1,18 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { TextInput, Button, Spinner, Alert, Modal, ModalHeader, ModalBody } from 'flowbite-react';
 import { useState, useRef, useEffect } from 'react';
-import { updateStart, updateSuccess, updateFailure, clearError, deleteUserStart, deleteUserSuccess, deleteUserFailure } from '../redux/user/userSlice.js';
+import { 
+    updateStart, 
+    updateSuccess, 
+    updateFailure, 
+    clearError, 
+    deleteUserStart, 
+    deleteUserSuccess, 
+    deleteUserFailure, 
+    signOutStart, 
+    signOutSuccess, 
+    signOutFailure 
+} from '../redux/user/userSlice.js';
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
 // import { supabase } from '../supabase/supabaseClient.js'
@@ -82,6 +93,28 @@ export default function DashProfile() {
         }
     }
 
+    const handleSignOut = async() => {
+        try {
+            dispatch(signOutStart());
+            const res = await fetch('/api/user/signout',{
+                method:'POST',
+                'Content-Type':'application/json'
+            })
+
+            if(!res.ok){
+                dispatch(signOutFailure());
+            }
+
+            else{
+                dispatch(signOutSuccess());
+            }
+        } 
+
+        catch (error) {
+            dispatch(signOutFailure());
+        }
+    }
+
     // const [imageFile, setImageFile] = useState(null);
     // const [imageFileUrl, setImageFileUrl] = useState(null);
     // const filePickerRef = useRef(null);
@@ -140,7 +173,7 @@ export default function DashProfile() {
 
             <div className='flex justify-between px-5 w-full md:w-100'>
                 <Button onClick={() => setShowModal(true)} outline color='red' className='cursor-pointer'>Delete Account</Button>
-                <Button outline color='yellow' className='cursor-pointer'>Sign Out</Button>
+                <Button onClick={() => handleSignOut()} outline color='yellow' className='cursor-pointer'>Sign Out</Button>
             </div>
 
             {
