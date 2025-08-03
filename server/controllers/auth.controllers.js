@@ -81,7 +81,7 @@ export const SignIn = async (req, res, next) => {
         }
 
         const token = jwt.sign(
-            { id: validUser._id }, JWT_SECRET, { expiresIn: '1d' }
+            { id: validUser._id, isAdmin: validUser.isAdmin }, JWT_SECRET, { expiresIn: '1d' }
         );
 
         const { password: pass, ...rest } = validUser._doc;
@@ -104,7 +104,7 @@ export const Google = async (req, res, next) => {
         const user = await User.findOne({ email });
 
         if (user) {
-            const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1d' });
+            const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, JWT_SECRET, { expiresIn: '1d' });
             const { password, ...rest } = user._doc;
             res.status(200).cookie('access_token', token, { httpOnly: true }).json({
                 success: true,
@@ -123,7 +123,7 @@ export const Google = async (req, res, next) => {
                 profilePic: googlePhotoUrl
             });
             await newUser.save();
-            const token = jwt.sign({ id: newUser._id }, JWT_SECRET);
+            const token = jwt.sign({ id: newUser._id, isAdmin: newUser.isAdmin }, JWT_SECRET, {expiresIn: '1d'});
             const { password, ...rest } = newUser._doc;
             res.status(201).cookie('access_token', token, { httpOnly: true }).json({
                 success: true,

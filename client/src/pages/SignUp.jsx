@@ -69,7 +69,7 @@ export default function SignUp() {
     }
 
     return (
-        <div className="flex-1 mt-20">
+        <div className="flex-1 flex justify-center items-center mb-15">
             <div className="flex flex-col md:flex-row gap-10 p-6 max-w-3xl mx-auto md:items-center">
                 {/* left */}
                 <div className="flex-1">
