@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link, useNavigate } from "react-router-dom"
 import { Label, TextInput, Button, Alert, Spinner } from "flowbite-react"
 import OAuth from '../components/OAuth.jsx'
+import { useDispatch, useSelector } from 'react-redux'
+import { signUpStart, signUpSuccess, signUpFailure, clearError } from '../redux/user/userSlice.js'
 
 export default function SignUp() {
     const [formData, setFormData] = useState({
@@ -10,25 +12,35 @@ export default function SignUp() {
         password: '',
     });
 
-    const [errorMessage, setErrorMessage] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const{ error:errorMessage, loading } = useSelector(state => state.user);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleChange = (e) => {
-        setErrorMessage(null);
+        dispatch(clearError());
         setFormData({ ...formData, [e.target.id]: e.target.value.trim() })
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!formData.username || !formData.email || !formData.password) {
-            return setErrorMessage('Please fill out all fields');
+        //Frontend Form Validation
+        if (!formData.username.trim() || !formData.email.trim() || !formData.password.trim()) {
+            return dispatch(signUpFailure('Please fill out all fields'));
         }
 
+        if (formData.password.length < 5 || formData.password.length > 14) {
+            return dispatch(signUpFailure('Password must be atleast 5 and atmost 14 characters'));
+        }
+
+        if (formData.password.includes(' ')){
+            return dispatch(signUpFailure('Password cannot contain spaces'));
+        }
+
+        //
+
         try {
-            setLoading(true);
-            setErrorMessage(null);
+            dispatch(signUpStart());
             const res = await fetch('/api/auth/signup', {
                 method: 'POST',
                 headers: {
@@ -40,23 +52,20 @@ export default function SignUp() {
             const data = await res.json();
 
             if (!data.success) {
-                return setErrorMessage(data.message);
+                return dispatch(signUpFailure(data.message));
             }
 
             if (res.ok) {
                 navigate('/sign-in');
+                dispatch(signUpSuccess());
             }
 
         }
 
         catch (err) {
-            setErrorMessage(err.message);
-            setLoading(false);
+            dispatch(signUpFailure(err.message));
         }
 
-        finally {
-            setLoading(false);
-        }
     }
 
     return (

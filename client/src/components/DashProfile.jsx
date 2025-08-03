@@ -1,10 +1,58 @@
-import { useSelector } from 'react-redux'
-import { TextInput, Button } from 'flowbite-react';
+import { useSelector, useDispatch } from 'react-redux'
+import { TextInput, Button, Spinner, Alert } from 'flowbite-react';
 import { useState, useRef, useEffect } from 'react';
-import { supabase } from '../supabase/supabaseClient.js'
+import { updateStart, updateSuccess, updateFailure, clearError } from '../redux/user/userSlice.js';
+
+// import { supabase } from '../supabase/supabaseClient.js'
 
 export default function DashProfile() {
-    const { currentUser } = useSelector(state => state.user);
+    const { currentUser, loading, error } = useSelector(state => state.user);
+    const [formData, setFormData] = useState({});
+    const [updateUserSuccess, setUserUpdateSuccess] = useState(null);
+    const dispatch = useDispatch();
+
+    const handleChange = (e) => {
+        dispatch(clearError());
+        setUserUpdateSuccess(null);
+        setFormData({ ...formData, [e.target.id]: e.target.value });
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (Object.keys(formData).length === 0) {
+            return;
+        }
+
+        try {
+            dispatch(updateStart());
+
+            const res = await fetch(`/api/user/update/${currentUser._id.toString()}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                dispatch(updateFailure(data.message));
+                setUserUpdateSuccess(false);
+            }
+
+            else {
+                dispatch(updateSuccess(data.user));
+                setUserUpdateSuccess(true);
+            }
+        }
+        catch (err) {
+            dispatch(updateFailure(err.message));
+            setUserUpdateSuccess(false);
+        }
+    }
+
     // const [imageFile, setImageFile] = useState(null);
     // const [imageFileUrl, setImageFileUrl] = useState(null);
     // const filePickerRef = useRef(null);
@@ -32,9 +80,9 @@ export default function DashProfile() {
     return (
         <div className='flex flex-col items-center'>
             <h1 className='my-7 font-semibold text-3xl'>Profile</h1>
-            <form className='flex flex-col gap-5 w-full items-center'>
+            <form className='flex flex-col gap-5 w-full items-center' onSubmit={handleSubmit}>
                 {/* <input type="file" accept='image/*' onChange={handleImageChange} ref={filePickerRef} hidden /> */}
-                <div className='w-32 h-32 shadow-md overflow-hidden rounded-full' 
+                <div className='w-32 h-32 shadow-md overflow-hidden rounded-full'
                 // onClick={() => filePickerRef.current.click()}
                 >
                     <img src={
@@ -43,12 +91,19 @@ export default function DashProfile() {
                 </div>
 
                 <div className='flex flex-col gap-5 p-5 w-full md:w-100'>
-                    <TextInput type='text' id='username' placeholder='username' defaultValue={currentUser.username} />
-                    <TextInput type='email' id='email' placeholder='email' defaultValue={currentUser.email} />
-                    <TextInput type='password' id='password' placeholder='password' />
-                    <button type='submit' className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 cursor-pointer">
+                    <TextInput type='text' id='username' placeholder='username' defaultValue={currentUser.username} onChange={handleChange} />
+                    {/* <TextInput type='email' id='email' placeholder='email' defaultValue={currentUser.email} /> */}
+                    <TextInput type='password' id='password' placeholder='password' onChange={handleChange} />
+                    <button type='submit' className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 cursor-pointer" disabled={loading  }>
                         <span className="w-full relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">
-                            Update
+                            {
+                                loading ? (
+                                    <>
+                                        <Spinner size='sm' />
+                                        <span className='pl-3'>Loading...</span>
+                                    </>
+                                ) : 'Update'
+                            }
                         </span>
                     </button>
                 </div>
@@ -58,6 +113,18 @@ export default function DashProfile() {
                 <Button outline color='red' className='cursor-pointer'>Delete Account</Button>
                 <Button outline color='yellow' className='cursor-pointer'>Sign Out</Button>
             </div>
+
+            {
+                error && (
+                    <Alert color='failure' className='mt-5'>{error}</Alert>
+                )
+            }
+
+            {
+                updateUserSuccess && (
+                    <Alert color='green' className='mt-5'>User updated successfully</Alert>
+                )
+            }
         </div>
     )
 }
