@@ -1,4 +1,4 @@
-import { errorThrower } from "../utils/error.js";
+import { errorSetter, errorThrower } from "../utils/error.js";
 import { Post } from "../models/post.models.js";
 
 export const createPost = async (req, res, next) => {
@@ -27,6 +27,10 @@ export const createPost = async (req, res, next) => {
     }
 
     catch (err) {
+        if (err.code === 11000){
+            next(errorSetter(409,'A post with this title already exists'));
+        }
+
         next(err);
     }
 }

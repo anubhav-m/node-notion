@@ -121,22 +121,25 @@ export default function DashProfile() {
     }
 
 
-    const handleImageChange = async(e) => {
+    const handleImageChange = async (e) => {
         const file = e.target.files[0];
-        if (file) { 
+        if (file) {
             await handleUpload(e, file);
         }
     }
 
     const handleUpload = async (e, file) => {
-
+        dispatch(clearError());
         setUploadingImage(true);
 
-        if(!file) return;
+        if (!file) {
+            setUploadingImage(false);
+            return;
+        }
 
         const fileExt = file.name.split('.').pop();
         const fileName = `${Date.now()}.${fileExt}`;
-        const filePath = `${fileName}`; 
+        const filePath = `${fileName}`;
 
         const { data, error } = await supabase.storage
             .from('profile-pic')
@@ -153,7 +156,7 @@ export default function DashProfile() {
             .from('profile-pic')
             .getPublicUrl(filePath);
 
-        if (!publicUrlData){
+        if (!publicUrlData) {
             dispatch(setError('Public URL not available'));
             setUploadingImage(false);
             return;
@@ -162,9 +165,8 @@ export default function DashProfile() {
         setImageFileUrl(publicUrlData.publicUrl);
         setUploadingImage(false);
 
-        dispatch(clearError());
         setUserUpdateSuccess(null);
-        setFormData({ ...formData, profilePic: publicUrlData.publicUrl});
+        setFormData({ ...formData, profilePic: publicUrlData.publicUrl });
     };
 
 
@@ -177,9 +179,9 @@ export default function DashProfile() {
                     onClick={() => filePickerRef.current.click()}
                 >
                     <img src={
-                        imageFileUrl || 
+                        imageFileUrl ||
                         currentUser.profilePic} referrerPolicy="no-referrer" alt="user" className='rounded-full w-full h-full object-cover border-8 border-[lightgray] cursor-pointer' />
-                        
+
                 </div>
 
                 <div className='flex flex-col gap-5 p-5 w-full md:w-100'>
@@ -191,7 +193,7 @@ export default function DashProfile() {
                                 (loading || uploadingImage) ? (
                                     <>
                                         <Spinner size='sm' />
-                                        <span className='pl-3'>{uploadingImage?'Uploading image...':'Loading'}</span>
+                                        <span className='pl-3'>{uploadingImage ? 'Uploading image...' : 'Loading'}</span>
                                     </>
                                 ) : 'Update'
                             }
