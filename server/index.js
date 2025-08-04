@@ -6,6 +6,7 @@ import { authRouter } from './routes/auth.routes.js'
 import { errorMiddleware } from './middlewares/error.middlewares.js'
 import cookieParser from 'cookie-parser'
 import { userRouter } from './routes/user.routes.js'
+import { postRouter } from './routes/post.routes.js'
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: false })); // Middleware to parse URL-enc
 
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
+app.use('/api/post', postRouter);
 
 app.use(errorMiddleware);
 

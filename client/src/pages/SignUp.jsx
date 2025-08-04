@@ -38,7 +38,7 @@ export default function SignUp() {
             return dispatch(signUpFailure('Username must be in lowercase'));
         }
 
-        if (formData.username.match(/^[a-z0-9]+$/)) {
+        if (!formData.username.match(/^[a-z0-9]+$/)) {
             return dispatch(signUpFailure('Username can only contain letters and numbers'));
         }
 
@@ -159,7 +159,7 @@ export default function SignUp() {
 
                     </form>
 
-                    <div className="flex gap-2 text-sm mt-5">
+                    <div className="flex gap-2 text-sm mt-5" onClick={()=>dispatch(clearError())}>
                         <span>Have an account?</span>
                         <Link to='/sign-in' className="text-blue-500">Sign In</Link>
                     </div>
