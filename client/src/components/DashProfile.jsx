@@ -126,49 +126,50 @@ export default function DashProfile() {
         if (file) {
             await handleUpload(e, file);
         }
-    }
+    };
 
     const handleUpload = async (e, file) => {
         dispatch(clearError());
         setUploadingImage(true);
 
-        if (!file) {
-            setUploadingImage(false);
-            return;
+        try {
+            if (!file) {
+                throw new Error("No file selected.");
+            }
+
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}.${fileExt}`;
+            const filePath = `${fileName}`;
+
+            const { data, error } = await supabase.storage
+                .from('profile-pic')
+                .upload(filePath, file);
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            const { data: publicUrlData } = supabase
+                .storage
+                .from('profile-pic')
+                .getPublicUrl(filePath);
+
+            if (!publicUrlData || !publicUrlData.publicUrl) {
+                throw new Error('Public URL not available');
+            }
+
+            setImageFileUrl(publicUrlData.publicUrl);
+            setUserUpdateSuccess(null);
+            setFormData({ ...formData, profilePic: publicUrlData.publicUrl });
+
         }
-
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}.${fileExt}`;
-        const filePath = `${fileName}`;
-
-        const { data, error } = await supabase.storage
-            .from('profile-pic')
-            .upload(filePath, file);
-
-        if (error) {
-            dispatch(setError(error.message));
-            setUploadingImage(false);
-            return;
+        catch (err) {
+            dispatch(setError(err.message || 'Upload failed'));
         }
-
-        const { data: publicUrlData } = supabase
-            .storage
-            .from('profile-pic')
-            .getPublicUrl(filePath);
-
-        if (!publicUrlData) {
-            dispatch(setError('Public URL not available'));
+        finally {
             setUploadingImage(false);
-            return;
         }
-
-        setImageFileUrl(publicUrlData.publicUrl);
-        setUploadingImage(false);
-
-        setUserUpdateSuccess(null);
-        setFormData({ ...formData, profilePic: publicUrlData.publicUrl });
     };
-
 
     return (
         <div className='flex flex-col items-center'>
@@ -205,7 +206,7 @@ export default function DashProfile() {
                             <Link to='/create-post'>
                                 <Button
                                     type='button'
-                                    className='bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:bg-gradient-to-l focus:ring-purple-200 dark:focus:ring-purple-800 w-full'
+                                    className='cursor-pointer bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:bg-gradient-to-l focus:ring-purple-200 dark:focus:ring-purple-800 w-full'
                                 >
                                     Create a post
                                 </Button>
