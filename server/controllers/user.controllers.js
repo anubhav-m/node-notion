@@ -3,9 +3,14 @@ import { errorThrower, errorSetter } from "../utils/error.js"
 import User from "../models/user.models.js";
 
 export const updateUser = async (req, res, next) => {
+
     try {
         if (req.params.id !== req.user.id) {
             errorThrower(403, 'You are not allowed to update this user');
+        }
+
+        if (!(req.body.username || req.body.password || req.body.profilePic)){
+            errorThrower(400, 'Nothing to update')
         }
 
         if (req.body.password) {
@@ -42,19 +47,19 @@ export const updateUser = async (req, res, next) => {
 
         let updatedUser;
 
-        if (req.body.username && req.body.password) {
+        if (req.body.profilePic) {
             updatedUser = await User.findByIdAndUpdate(req.params.id, {
-                $set: { username: req.body.username, password: req.body.password }
+                $set: { profilePic: req.body.profilePic }
             }, { new: true })
         }
 
-        else if (req.body.username) {
+        if (req.body.username) {
             updatedUser = await User.findByIdAndUpdate(req.params.id, {
                 $set: { username: req.body.username }
             }, { new: true })
         }
 
-        else if (req.body.password) {
+        if (req.body.password) {
             updatedUser = await User.findByIdAndUpdate(req.params.id, {
                 $set: { password: req.body.password }
             }, { new: true })

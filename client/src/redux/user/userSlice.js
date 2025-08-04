@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { act } from 'react';
 
 const initialState = {
     currentUser: null,
@@ -28,6 +29,10 @@ const userSlice = createSlice({
 
         clearError: (state) => {
             state.error = null;
+        },
+
+        setError: (state, action)=>{
+            state.error = action.payload;
         },
 
         signUpStart: (state) => {
@@ -103,6 +108,7 @@ export const {
     signUpSuccess,
     signUpFailure,
     clearError,
+    setError,
     updateStart,
     updateSuccess,
     updateFailure,
