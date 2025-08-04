@@ -12,7 +12,7 @@ export default function SignUp() {
         password: '',
     });
 
-    const{ error:errorMessage, loading } = useSelector(state => state.user);
+    const { error: errorMessage, loading } = useSelector(state => state.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -25,6 +25,23 @@ export default function SignUp() {
         e.preventDefault();
 
         //Frontend Form Validation
+        if (formData.username.length < 5 || formData.username.length > 30) {
+            return dispatch(signUpFailure('Username must be atleast 5 and atmost 30 characters'));
+        }
+
+        if (formData.username.includes(' ')) {
+
+            return dispatch(signUpFailure('Username cannot contain spaces'));
+        }
+
+        if (formData.username !== formData.username.toLowerCase()) {
+            return dispatch(signUpFailure('Username must be in lowercase'));
+        }
+
+        if (formData.username.match(/^[a-z0-9]+$/)) {
+            return dispatch(signUpFailure('Username can only contain letters and numbers'));
+        }
+
         if (!formData.username.trim() || !formData.email.trim() || !formData.password.trim()) {
             return dispatch(signUpFailure('Please fill out all fields'));
         }
@@ -33,7 +50,7 @@ export default function SignUp() {
             return dispatch(signUpFailure('Password must be atleast 5 and atmost 14 characters'));
         }
 
-        if (formData.password.includes(' ')){
+        if (formData.password.includes(' ')) {
             return dispatch(signUpFailure('Password cannot contain spaces'));
         }
 

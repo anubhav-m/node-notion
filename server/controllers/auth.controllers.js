@@ -9,6 +9,8 @@ export const SignUp = async (req, res, next) => {
     const { username, email, password } = req.body;
 
     try {
+
+        //Server-side Validation
         if (
             !username ||
             !email ||
@@ -19,6 +21,19 @@ export const SignUp = async (req, res, next) => {
         ) {
             errorThrower(400, 'All fields are required');
         }
+
+        if (password.length < 5 || password.length > 14) {
+            errorThrower(400, 'Password must be atleast 5 and atmost 14 characters');
+        }
+
+        if (password.includes(' ')) {
+            errorThrower(400, 'Password cannot contain spaces');
+        }
+
+        //username and email validation handled by User model
+
+        //-------------------------------------------------------
+
 
         const hashedPassword = bcryptjs.hashSync(password, 10);
 
@@ -113,7 +128,7 @@ export const Google = async (req, res, next) => {
             });
         }
 
-        else{
+        else {
             const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
             const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
             const newUser = new User({
@@ -123,7 +138,7 @@ export const Google = async (req, res, next) => {
                 profilePic: googlePhotoUrl
             });
             await newUser.save();
-            const token = jwt.sign({ id: newUser._id, isAdmin: newUser.isAdmin }, JWT_SECRET, {expiresIn: '1d'});
+            const token = jwt.sign({ id: newUser._id, isAdmin: newUser.isAdmin }, JWT_SECRET, { expiresIn: '1d' });
             const { password, ...rest } = newUser._doc;
             res.status(201).cookie('access_token', token, { httpOnly: true }).json({
                 success: true,
