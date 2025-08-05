@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react"
 import { useSelector, useDispatch } from 'react-redux'
 import { setError, clearError } from '../redux/user/userSlice.js'
-import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell, Button } from 'flowbite-react'
+import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell, Button, Modal, ModalHeader, ModalBody } from 'flowbite-react'
 import { Link } from 'react-router-dom'
 import { HashLoader } from 'react-spinners'
+import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
 export default function DashPosts() {
     const { currentUser } = useSelector(state => state.user);
     const [userPosts, setUserPosts] = useState([]);
     const [showMore, setShowMore] = useState(true);
     const [loadingPost, setLoadingPost] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [postIdToDelete, setPostIdToDelete] = useState(null);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -66,6 +69,29 @@ export default function DashPosts() {
         }
     }
 
+    const handleDeletePost = async () => {
+        setShowModal(false);
+        dispatch(clearError());
+        try {
+            const res = await fetch(`/api/post/deletepost/${postIdToDelete}`, {
+                method: 'DELETE',
+            })
+
+            const data = await res.json();
+
+            if (!res.ok) {
+               throw new Error(data.message);
+            }
+
+            else {
+                setUserPosts((prev)=>prev.filter((post)=>post._id!==postIdToDelete))
+            }
+        }
+        catch (error) {
+            dispatch(setError(error.message));
+        }
+    }
+
     return (
         <div className="max-w-full h-full overflow-x-auto p-5
         scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
@@ -111,7 +137,10 @@ export default function DashPosts() {
                                                         {post.category}
                                                     </TableCell>
                                                     <TableCell>
-                                                        <span className="font-medium text-red-500 hover:underline cursor-pointer"> Delete</span>
+                                                        <span onClick={() => { 
+                                                            setShowModal(true);
+                                                            setPostIdToDelete(post._id);
+                                                         }} className="font-medium text-red-500 hover:underline cursor-pointer"> Delete</span>
                                                     </TableCell>
                                                     <TableCell>
                                                         <Link className="text-teal-500 hover:underline" to={`/update-post/${post._id}`}>
@@ -140,6 +169,23 @@ export default function DashPosts() {
                         )
                 )
             }
+
+            <Modal show={showModal} onClose={() => setShowModal(false)} popup size='md'>
+                <ModalHeader />
+                <ModalBody>
+                    <div className="text-center">
+                        <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
+                        <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>Are you sure you want to delete this post?</h3>
+                        <div className='flex justify-between px-7'>
+                            <Button color='red' onClick={handleDeletePost} className='cursor-pointer'>
+                                Yes, I am sure
+                            </Button>
+
+                            <Button onClick={() => setShowModal(false)} className='cursor-pointer'>No, cancel</Button>
+                        </div>
+                    </div>
+                </ModalBody>
+            </Modal>
 
         </div>
     )

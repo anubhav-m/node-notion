@@ -7,7 +7,7 @@ export const createPost = async (req, res, next) => {
             errorThrower(403, 'Unauthorized - only admins can create a post');
         }
 
-        if (!req.body.title || !req.body.content){
+        if (!req.body.title || !req.body.content) {
             errorThrower(400, 'Please provide all required fields');
         }
 
@@ -27,42 +27,42 @@ export const createPost = async (req, res, next) => {
     }
 
     catch (err) {
-        if (err.code === 11000){
-            next(errorSetter(409,'A post with this title already exists'));
+        if (err.code === 11000) {
+            next(errorSetter(409, 'A post with this title already exists'));
         }
 
         next(err);
     }
 }
 
-export const getPosts = async(req, res, next)=>{
+export const getPosts = async (req, res, next) => {
     try {
         const startIndex = parseInt(req.query.startIndex) || 0;
         const limit = parseInt(req.query.limit) || 9;
-        const sortDirection = req.query.order === 'asc' ? 1 : -1 ;
+        const sortDirection = req.query.order === 'asc' ? 1 : -1;
         const posts = await Post.find({
-            ...(req.query.userId && {userId: req.query.userId}),
-            ...(req.query.category && {category: req.query.category}),
-            ...(req.query.slug && {slug: req.query.slug}), 
-            ...(req.query.postId && {_id: req.query.postId}), 
+            ...(req.query.userId && { userId: req.query.userId }),
+            ...(req.query.category && { category: req.query.category }),
+            ...(req.query.slug && { slug: req.query.slug }),
+            ...(req.query.postId && { _id: req.query.postId }),
             ...(req.query.searchTerm && {
-                $or:[
-                    {title: { $regex: req.query.searchTerm, $options: 'i'}},
-                    {content: { $regex: req.query.searchTerm, $options: 'i'}},
+                $or: [
+                    { title: { $regex: req.query.searchTerm, $options: 'i' } },
+                    { content: { $regex: req.query.searchTerm, $options: 'i' } },
                 ]
-            }), 
+            }),
         })
-        .sort({ updatedAt: sortDirection })
-        .skip(startIndex)
-        .limit(limit); 
-        
+            .sort({ updatedAt: sortDirection })
+            .skip(startIndex)
+            .limit(limit);
+
         const totalPosts = await Post.countDocuments();
 
         const now = new Date();
 
         const oneMonthAgo = new Date(
             now.getFullYear(),
-            now.getMonth()-1,
+            now.getMonth() - 1,
             now.getDate()
         )
 
@@ -77,8 +77,35 @@ export const getPosts = async(req, res, next)=>{
             totalPosts,
             lastMonthPosts
         })
-    } 
-    
+    }
+
+    catch (err) {
+        next(err);
+    }
+}
+
+export const deletePost = async (req, res, next) => {
+    try {
+        const post = await Post.findById(req.params.postId);
+
+        if (!post) {
+            errorThrower(404, 'Post not found');
+        }
+
+        const isOwner = post.userId.toString() === req.user._id.toString();
+        const isAdmin = req.user.isAdmin;
+
+        if (!isOwner && !isAdmin) {
+            errorThrower(403, 'You are not allowed to delete this post');
+        }
+
+        await post.deleteOne();
+        
+        res.status(200).json({
+            success: true,
+            message: 'Post deleted successfully'
+        });
+    }
     catch (err) {
         next(err);
     }
