@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { act } from 'react';
 
 const initialState = {
     currentUser: null,
@@ -97,6 +96,7 @@ const userSlice = createSlice({
             state.loading = false,
             state.error = action.payload
         },
+
     }
 });
 

@@ -21,7 +21,7 @@ export default function Dashboard() {
                 <DashSidebar />
             </div>
 
-            <div className="w-full">
+            <div className="w-full overflow-x-auto">
                 {/* Profile ... */}
                 {tab === 'profile' && <DashProfile />}
                 {/* Posts ... */}

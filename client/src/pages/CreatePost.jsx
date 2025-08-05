@@ -89,9 +89,10 @@ export default function CreatePost() {
             if(!data.success){
                 throw new Error(data.message);
             }
-
+            
             if(data.success){
-                navigate(`/post/${data.slug}`)
+                console.log(data);
+                navigate(`/post/${data.post.slug}`)
             }
         } 
         
