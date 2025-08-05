@@ -110,3 +110,45 @@ export const deletePost = async (req, res, next) => {
         next(err);
     }
 }
+
+export const updatePost = async (req, res, next) => {
+    try {
+        const post = await Post.findById(req.params.postId);
+
+        if (!post) {
+            errorThrower(404, 'Post not found');
+        }
+
+        const isOwner = post.userId.toString() === req.user._id.toString();
+        const isAdmin = req.user.isAdmin;
+
+        if (!isOwner && !isAdmin) {
+            errorThrower(403, 'You are not allowed to update this post');
+        }
+
+        
+        const allowedFields = ['title', 'content', 'image', 'category'];
+        const updateData = {};
+
+        allowedFields.forEach(field => {
+            if (req.body[field] !== undefined) {
+                updateData[field] = req.body[field];
+            }
+        });
+
+        const updatedPost = await Post.findByIdAndUpdate(
+            req.params.postId,
+            { $set: updateData },
+            { new: true } 
+        );
+
+        res.status(200).json({
+            success: true,
+            message: 'Post updated successfully',
+            post: updatedPost,
+        });
+
+    } catch (err) {
+        next(err);
+    }
+};

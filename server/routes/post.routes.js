@@ -1,9 +1,10 @@
 import express from 'express';
 import { authorize } from '../middlewares/auth.middlewares.js'
-import { createPost, getPosts, deletePost } from '../controllers/post.controllers.js';
+import { createPost, getPosts, deletePost, updatePost } from '../controllers/post.controllers.js';
 
 export const postRouter = express.Router();
 
 postRouter.post('/create', authorize, createPost);
 postRouter.get('/getposts', getPosts);
 postRouter.delete('/deletepost/:postId', authorize, deletePost);
+postRouter.put('/updatepost/:postId', authorize, updatePost);
