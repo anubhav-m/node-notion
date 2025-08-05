@@ -57,12 +57,12 @@ export const SignUp = async (req, res, next) => {
 
             if (duplicateField === 'username') {
                 const usernameError = errorSetter(400, `${username} - Username not available`);
-                next(usernameError);
+                return next(usernameError);
             }
 
             else if (duplicateField === 'email') {
                 const emailError = errorSetter(400, `${email} is already registered`);
-                next(emailError);
+                return next(emailError);
             }
         }
         next(err);

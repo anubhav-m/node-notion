@@ -5,11 +5,13 @@ import User from "../models/user.models.js";
 export const updateUser = async (req, res, next) => {
 
     try {
+
+        //Backend validation
         if (req.params.id !== req.user.id) {
             errorThrower(403, 'You are not allowed to update this user');
         }
 
-        if (!(req.body.username || req.body.password || req.body.profilePic)){
+        if (!(req.body.username || req.body.password || req.body.profilePic)) {
             errorThrower(400, 'Nothing to update')
         }
 
@@ -44,26 +46,20 @@ export const updateUser = async (req, res, next) => {
                 errorThrower(400, 'Username can only contain letters and numbers')
             }
         }
+        //..............................................................
 
-        let updatedUser;
+        const updateFields = {
+            ...(req.body.profilePic && { profilePic: req.body.profilePic }),
+            ...(req.body.username && { username: req.body.username }),
+            ...(req.body.password && { password: req.body.password }),
+        };
 
-        if (req.body.profilePic) {
-            updatedUser = await User.findByIdAndUpdate(req.params.id, {
-                $set: { profilePic: req.body.profilePic }
-            }, { new: true })
-        }
 
-        if (req.body.username) {
-            updatedUser = await User.findByIdAndUpdate(req.params.id, {
-                $set: { username: req.body.username }
-            }, { new: true })
-        }
-
-        if (req.body.password) {
-            updatedUser = await User.findByIdAndUpdate(req.params.id, {
-                $set: { password: req.body.password }
-            }, { new: true })
-        }
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.id,
+            { $set: updateFields },
+            { new: true }
+        );
 
         const { password, ...rest } = updatedUser._doc;
 
@@ -79,7 +75,7 @@ export const updateUser = async (req, res, next) => {
 
             if (duplicateField === 'username') {
                 const usernameError = errorSetter(400, `Username not available`);
-                next(usernameError);
+                return next(usernameError);
             }
 
         }
@@ -95,7 +91,7 @@ export const deleteUser = async (req, res, next) => {
         }
 
         await User.findByIdAndDelete(req.params.id);
-        
+
         res.status(200).json({
             success: true,
             message: "User deleted successfully"
@@ -107,14 +103,14 @@ export const deleteUser = async (req, res, next) => {
 }
 
 export const signOut = async (req, res, next) => {
-    try{
+    try {
         res.clearCookie('access_token').status(200).json({
-            success:true,
-            message:"User signed out successfully"
+            success: true,
+            message: "User signed out successfully"
         })
     }
 
-    catch(err){
+    catch (err) {
         next(err);
     }
 }

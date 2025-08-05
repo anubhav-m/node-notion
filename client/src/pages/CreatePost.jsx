@@ -67,7 +67,7 @@ export default function CreatePost() {
     };
 
     const handleSubmit = async(e) => {
-        setError(null);
+        dispatch(clearError());
         e.preventDefault();
         try {
             //Validation

@@ -40,6 +40,7 @@ export default function DashProfile() {
         e.preventDefault();
 
         if (Object.keys(formData).length === 0) {
+            dispatch(setError('Nothing to update'));
             return;
         }
 
