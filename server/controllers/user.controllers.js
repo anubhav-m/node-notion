@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { errorThrower, errorSetter } from "../utils/error.js"
 import User from "../models/user.models.js";
+import { Post } from '../models/post.models.js';
 
 export const updateUser = async (req, res, next) => {
 
@@ -11,8 +12,8 @@ export const updateUser = async (req, res, next) => {
             errorThrower(403, 'You are not allowed to update this user');
         }
 
-        if (!(req.body.username || req.body.password || req.body.profilePic)) {
-            errorThrower(400, 'Nothing to update')
+        if (!req.body.username && !req.body.password && !req.body.profilePic) {
+            errorThrower(400, 'Nothing to update');
         }
 
         if (req.body.password) {
@@ -86,21 +87,26 @@ export const updateUser = async (req, res, next) => {
 
 export const deleteUser = async (req, res, next) => {
     try {
-        if (req.params.id !== req.user.id) {
+        const isOwner = req.params.id === req.user.id;
+        const isAdmin = req.user.isAdmin;
+
+        if (!isOwner && !isAdmin) {
             errorThrower(403, 'You are not allowed to delete this user');
         }
 
+        await Post.deleteMany({userId: req.user.id})
         await User.findByIdAndDelete(req.params.id);
 
         res.status(200).json({
             success: true,
-            message: "User deleted successfully"
-        })
-    }
+            message: "User and associated posts deleted successfully"
+        });
+    } 
     catch (err) {
         next(err);
     }
 }
+
 
 export const signOut = async (req, res, next) => {
     try {

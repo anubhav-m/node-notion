@@ -76,26 +76,26 @@ export default function DashUsers() {
 
     const handleDeleteUser = async () => {
         console.log('Ye le delete ho gya user');
-        // setShowModal(false);
-        // dispatch(clearError());
-        // try {
-        //     const res = await fetch(`/api/user/deleteuser/${postIdToDelete}`, {
-        //         method: 'DELETE',
-        //     })
+        setShowModal(false);
+        dispatch(clearError());
+        try {
+            const res = await fetch(`/api/user/delete/${userIdToDelete}`, {
+                method: 'DELETE',
+            })
 
-        //     const data = await res.json();
+            const data = await res.json();
 
-        //     if (!res.ok) {
-        //        throw new Error(data.message);
-        //     }
+            if (!res.ok) {
+               throw new Error(data.message);
+            }
 
-        //     else {
-        //         setUserPosts((prev)=>prev.filter((post)=>post._id!==postIdToDelete))
-        //     }
-        // }
-        // catch (error) {
-        //     dispatch(setError(error.message));
-        // }
+            else {
+                setUsers((prev)=>prev.filter((user)=>user._id!==userIdToDelete))
+            }
+        }
+        catch (error) {
+            dispatch(setError(error.message));
+        }
     }
 
     return (
