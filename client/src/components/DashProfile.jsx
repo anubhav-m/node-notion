@@ -219,7 +219,7 @@ export default function DashProfile() {
                 </div>
             </form>
 
-            <div className='flex justify-between px-5 w-full md:w-100 mt-3'>
+            <div className='flex justify-between px-5 w-full md:w-100 mt-3 mb-5'>
                 <Button onClick={() => setShowModal(true)} outline color='red' className='cursor-pointer'>Delete Account</Button>
                 <Button onClick={() => handleSignOut()} outline color='yellow' className='cursor-pointer'>Sign Out</Button>
             </div>
