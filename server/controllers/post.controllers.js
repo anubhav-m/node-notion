@@ -1,6 +1,7 @@
 import { errorSetter, errorThrower } from "../utils/error.js";
 import { Post } from "../models/post.models.js";
 
+
 export const createPost = async (req, res, next) => {
     try {
         if (!req.user.isAdmin) {
@@ -100,7 +101,7 @@ export const deletePost = async (req, res, next) => {
         }
 
         await post.deleteOne();
-        
+
         res.status(200).json({
             success: true,
             message: 'Post deleted successfully'
@@ -126,7 +127,7 @@ export const updatePost = async (req, res, next) => {
             errorThrower(403, 'You are not allowed to update this post');
         }
 
-        
+
         const allowedFields = ['title', 'content', 'image', 'category'];
         const updateData = {};
 
@@ -139,7 +140,7 @@ export const updatePost = async (req, res, next) => {
         const updatedPost = await Post.findByIdAndUpdate(
             req.params.postId,
             { $set: updateData },
-            { new: true } 
+            { new: true }
         );
 
         res.status(200).json({
@@ -152,3 +153,4 @@ export const updatePost = async (req, res, next) => {
         next(err);
     }
 };
+
