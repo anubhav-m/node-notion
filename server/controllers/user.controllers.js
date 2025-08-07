@@ -168,3 +168,30 @@ export const getUsers = async (req, res, next) => {
         next(err);
     }
 }
+
+export const getUser = async (req, res, next) => {
+    try {
+        const userId = req.params.userId;
+
+        if (!userId){
+            errorThrower(400, 'No user id provided');
+        }
+
+        const user = await User.findById(userId);
+        
+        if(!user){
+            errorThrower(404, 'User not found');
+        }
+        
+        const { password, ...rest } = user._doc;
+        res.status(200).json({
+            success: true,
+            message: 'Fetched user successfully',
+            user: rest
+        });
+    } 
+    
+    catch (err) {
+        
+    }
+}

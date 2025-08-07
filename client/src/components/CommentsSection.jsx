@@ -1,24 +1,49 @@
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
 import { Textarea, Alert } from 'flowbite-react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Comment from './Comment.jsx'
 
 export default function CommentsSection({ postId }) {
     const { currentUser } = useSelector(state => state.user);
     const [comment, setComment] = useState('');
+    const [comments, setComments] = useState([]);
     const [error, setError] = useState(null);
 
+    useEffect(() => {
+        const getComments = async () => {
+
+            try {
+                const res = await fetch(`/api/comment/getPostComments/${postId}`);
+                const data = await res.json();
+
+                if (!data.success) {
+                    throw new Error('Error loading user comments');
+                }
+
+                setError(null);
+                setComments(data.comments);
+
+            }
+
+            catch (error) {
+                setError('Error loading user comments');
+            }
+        }
+        getComments();
+    }, [postId]);
+
     const handleSubmit = async (e) => {
-        console.log("i was touched ")
+
         e.preventDefault();
         setError(null);
 
         try {
-            console.log("i was touched ")
+
             if (comment.length > 200) {
                 throw new Error('Only 200 characters allowed for comment');
             }
-            console.log("i was touched ")
+
             const res = await fetch('/api/comment/create', {
                 method: 'POST',
                 headers: {
@@ -29,15 +54,16 @@ export default function CommentsSection({ postId }) {
                     postId
                 })
             });
-            console.log("i was touched ")
+
             const data = await res.json();
 
-            if (!data.success){
+            if (!data.success) {
                 throw new Error('Unable to comment, try again later!!');
             }
 
             setError(null);
             setComment('');
+            setComments((prev)=>[data.comment, ...prev]);
         }
 
         catch (error) {
@@ -72,10 +98,29 @@ export default function CommentsSection({ postId }) {
                         </form>
 
                         {
-                            error && 
+                            error &&
                             <Alert color='failure'>
                                 {error}
                             </Alert>
+                        }
+
+                        {
+                            comments.length === 0 ? (
+                                <p className='text-sm my-5'>No comments yet!</p>
+                            ) : (
+                                <>
+                                    <div className="text-sm my-5 flex items-center gap-1">
+                                        <p>Comments</p>
+                                        <p className='border border-gray-400 py-1 px-2 rounded-sm'>{comments.length}</p>
+                                    </div>
+
+                                    {
+                                        comments.map(comment=>(
+                                            <Comment key={comment._id} comment={comment}/>
+                                        ))
+                                    }
+                                </>
+                            )
                         }
                     </>
                 ) : (
