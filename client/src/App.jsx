@@ -13,34 +13,34 @@ import CreatePost from './pages/CreatePost.jsx'
 import UpdatePost from './pages/UpdatePost.jsx'
 import ResetOnNavigate from "./components/ResetOnNavigate";
 import PostPage from './pages/PostPage.jsx'
+import ScrollToTop from './components/ScrollToTop.jsx'
 
 
 export default function App() {
 	return (
 		<BrowserRouter>
-			<ResetOnNavigate>
-				<div className="min-h-screen flex flex-col">
-					<Header />
-					<Routes>
-						<Route path='/' element={<Home />}></Route>
-						<Route path='/about' element={<About />}></Route>
-						<Route path='/sign-up' element={<SignUp />}></Route>
-						<Route path='/sign-in' element={<SignIn />}></Route>
-						<Route element={<PrivateRoute />}>
-							<Route path='/dashboard' element={<Dashboard />}></Route>
-						</Route>
-						<Route path='/projects' element={<Projects />}></Route>
-						<Route path='/post/:postSlug' element={<PostPage />}></Route>
-						<Route element={<OnlyAdminPrivateRoute />}>
-							<Route path='/create-post' element={<CreatePost />}></Route>
-							<Route path='/update-post/:postId' element={<UpdatePost />}></Route>
-						</Route>
-					</Routes>
-				</div>
-				<Footer />
-			</ResetOnNavigate>
-
-
+			<ScrollToTop/>
+				<ResetOnNavigate>
+					<div className="min-h-screen flex flex-col">
+						<Header />
+						<Routes>
+							<Route path='/' element={<Home />}></Route>
+							<Route path='/about' element={<About />}></Route>
+							<Route path='/sign-up' element={<SignUp />}></Route>
+							<Route path='/sign-in' element={<SignIn />}></Route>
+							<Route element={<PrivateRoute />}>
+								<Route path='/dashboard' element={<Dashboard />}></Route>
+							</Route>
+							<Route path='/projects' element={<Projects />}></Route>
+							<Route path='/post/:postSlug' element={<PostPage />}></Route>
+							<Route element={<OnlyAdminPrivateRoute />}>
+								<Route path='/create-post' element={<CreatePost />}></Route>
+								<Route path='/update-post/:postId' element={<UpdatePost />}></Route>
+							</Route>
+						</Routes>
+					</div>
+					<Footer />
+				</ResetOnNavigate>
 		</BrowserRouter>
 	)
 }

@@ -2,14 +2,13 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom"
 import { HashLoader } from 'react-spinners'
 import { Button } from "flowbite-react";
+import CommentSection from "../components/CommentsSection.jsx"
 
 export default function PostPage() {
     const { postSlug } = useParams();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [post, setPost] = useState(null);
-
-    console.log(post);
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -61,6 +60,8 @@ export default function PostPage() {
                             </div>
 
                             <div dangerouslySetInnerHTML={{__html: post && post.content}} className="p-2 max-w-2xl mx-auto w-full my-7 post-content"></div>
+
+                            <CommentSection postId={post._id} />
                         </>
                     )
                 )
