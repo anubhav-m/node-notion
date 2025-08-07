@@ -11,13 +11,19 @@ import { useNavigate, useParams } from 'react-router-dom'
 export default function UpdatePost() {
 
     const { error } = useSelector(state => state.user);
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState({
+        title: '',
+        content: '',
+        category: 'uncaategorised'
+    });
     const dispatch = useDispatch();
     const [imageFile, setImageFile] = useState(null);
     const [uploadingImage, setUploadingImage] = useState(false);
     const [imageFileUrl, setImageFileUrl] = useState(null);
     const navigate = useNavigate();
     const { postId } = useParams();
+
+    console.log(`form data`, formData);
 
     useEffect(() => {
         try {
@@ -92,6 +98,7 @@ export default function UpdatePost() {
         dispatch(clearError());
         e.preventDefault();
         try {
+            console.log(formData);
             //Validation
             if (!formData.title.trim() || !formData.content.trim() || !formData.content.trim()) {
                 throw new Error('Please fill all the required fields');
@@ -128,8 +135,8 @@ export default function UpdatePost() {
 
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                 <div className="flex flex-col md:flex-row gap-4 justify-between mb-5">
-                    <TextInput type='text' placeholder='Title' id='title' className='flex-3' required onChange={(e) => setFormData({ ...formData, title: e.target.value })} value={formData.title}/>
-                    <Select className='flex-1' onChange={(e) => setFormData({ ...formData, category: e.target.value })} value={formData.category}>
+                    <TextInput type='text' placeholder='Title' id='title' className='flex-3' required onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} value={formData.title}/>
+                    <Select className='flex-1' onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} value={formData.category}>
                         <option value="uncategorized">Select a category</option>
                         <option value="javascript">JavaScript</option>
                         <option value="reactjs">React.js</option>
@@ -173,7 +180,7 @@ export default function UpdatePost() {
                     )
                 }
 
-                <ReactQuill theme='snow' className='h-72 mb-15' required onChange={(value) => setFormData({ ...formData, content: value })} value={formData.content}/>
+                <ReactQuill theme='snow' className='h-72 mb-15' required onChange={(value) => setFormData(prev => ({ ...prev, content: value }))} value={formData.content}/>
 
                 <button className="cursor-pointer relative inline-flex items-center justify-center p-0.5 mb-15 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800" type='submit'>
                     <span className="w-full relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">

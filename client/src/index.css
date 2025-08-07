@@ -4,3 +4,35 @@
 @plugin 'tailwind-scrollbar';
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+.post-content p{
+    @apply mb-2
+}
+
+.post-content h1{
+    @apply text-3xl font-sans font-bold mb-2
+}
+
+.post-content h2{
+    @apply text-2xl font-sans mb-2
+}
+
+.post-content h3{
+    @apply text-xl font-sans mb-2
+}
+
+.post-content a{
+    @apply text-blue-500 no-underline dark:text-red-500 hover:underline
+}
+
+.post-content li[data-list="bullet"]{
+    @apply list-disc ml-8
+}
+
+.post-content li[data-list="ordered"]{
+    @apply list-decimal ml-8
+}
+
+
+
+
