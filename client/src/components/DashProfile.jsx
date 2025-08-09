@@ -203,7 +203,7 @@ export default function DashProfile() {
                     </button>
 
                     {
-                        currentUser.isAdmin && (
+                        currentUser && (
                             <Link to='/create-post'>
                                 <Button
                                     type='button'

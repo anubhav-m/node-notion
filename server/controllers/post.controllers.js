@@ -4,10 +4,6 @@ import { Post } from "../models/post.models.js";
 
 export const createPost = async (req, res, next) => {
     try {
-        if (!req.user.isAdmin) {
-            errorThrower(403, 'Unauthorized - only admins can create a post');
-        }
-
         if (!req.body.title || !req.body.content) {
             errorThrower(400, 'Please provide all required fields');
         }
