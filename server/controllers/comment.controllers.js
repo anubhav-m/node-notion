@@ -50,32 +50,32 @@ export const getPostComments = async (req, res, next) => {
     }
 }
 
-export const likeComment = async(req, res, next) => {
+export const likeComment = async (req, res, next) => {
     try {
         const commentId = req.params.commentId;
         const user = req.user.id;
 
-        if (!commentId){
+        if (!commentId) {
             errorThrower(400, 'No commentId found');
         }
 
         const comment = await Comment.findById(commentId);
 
-        if (!comment){
+        if (!comment) {
             errorThrower(404, 'No comment found by the given commentId');
         }
 
         const userIndex = comment.likes.indexOf(user);
 
-        if (userIndex === -1){
+        if (userIndex === -1) {
             comment.numberOfLikes += 1;
             comment.likes.push(user);
         }
-        else{
+        else {
             comment.numberOfLikes -= 1;
             comment.likes.splice(userIndex, 1);
         }
-        
+
         await comment.save();
 
         res.status(200).json({
@@ -83,8 +83,50 @@ export const likeComment = async(req, res, next) => {
             message: "Successfully updated count of likes",
             comment
         })
-    } 
-    
+    }
+
+    catch (err) {
+        next(err);
+    }
+}
+
+
+export const editComment = async (req, res, next) => {
+    try {
+        const commentId = req.params.commentId;
+
+        if (!commentId) {
+            errorThrower(400, 'Comment ID is required');
+        }
+
+        const comment = await Comment.findById(commentId);
+
+        if (!comment) {
+            errorThrower(404, 'Comment not found');
+        }
+
+        const isOwner = req.user;
+        const isAdmin = req.user.isAdmin;
+
+        if (!isOwner && !isAdmin) {
+            errorThrower(403, 'Unauthorized - You cannot eedit this comment');
+        }
+
+        const editedComment = await Comment.findByIdAndUpdate(
+            commentId,
+            {
+                content: req.body.content
+            },
+            { new: true }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: 'Comment successfully updated',
+            comment: editedComment
+        })
+    }
+
     catch (err) {
         next(err);
     }
