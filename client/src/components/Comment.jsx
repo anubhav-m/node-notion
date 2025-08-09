@@ -4,16 +4,11 @@ import { FaThumbsUp } from 'react-icons/fa'
 import { useSelector } from "react-redux";
 import { Textarea, Button } from 'flowbite-react';
 
-export default function Comment({ comment, onLike, onEdit }) {
+export default function Comment({ comment, onLike, onEdit, onDelete }) {
     const [user, setUser] = useState({});
     const { currentUser } = useSelector(state => state.user);
     const [isEditing, setIsEditing] = useState(false);
     const [editedContent, setEditedContent] = useState(comment.content);
-
-    // console.log(currentUser);
-    // console.log(comment);
-    // console.log(editedContent);
-    // console.log(currentUser._id === comment.userId);
 
     useEffect(() => {
         const getUser = async () => {
@@ -59,8 +54,8 @@ export default function Comment({ comment, onLike, onEdit }) {
 
             setIsEditing(false);
             onEdit(comment, editedContent);
-        } 
-        
+        }
+
         catch (err) {
             console.error(err);
         }
@@ -92,11 +87,11 @@ export default function Comment({ comment, onLike, onEdit }) {
                             <div className="flex justify-end gap-3 ">
                                 <Button
                                     className="cursor-pointer bg-gradient-to-br from-purple-600 to-blue-500 text-white hover:bg-gradient-to-bl focus:ring-blue-300 dark:focus:ring-blue-800"
-                                    type="button" size="xs" onClick={()=>handleSave(comment, editedContent)}
+                                    type="button" size="xs" onClick={() => handleSave(comment, editedContent)}
                                 >
                                     Save
                                 </Button>
-                               
+
                                 <Button
                                     className="cursor-pointer bg-gradient-to-br from-purple-600 to-blue-500 text-white hover:bg-gradient-to-bl focus:ring-blue-300 dark:focus:ring-blue-800"
                                     type="button" size="xs" onClick={() => setIsEditing(false)}
@@ -104,15 +99,19 @@ export default function Comment({ comment, onLike, onEdit }) {
                                     Cancel
                                 </Button>
 
-                           
+
                             </div>
                         </>
                     ) : (
                         <>
                             <p className="text-gray-500 pb-2">{comment.content}</p>
 
-                            <div className="flex gap-3 items-center text-xs mb-1 border-t dark:border-gray-700 max-w-fit pt-2" onClick={() => onLike(comment._id)}>
-                                <button type="button" className={`pb-1 cursor-pointer text-gray-400 hover:text-blue-500 ${currentUser && comment.likes.includes(currentUser._id) && '!text-blue-600'}`}>
+                            <div className="flex gap-3 items-center text-xs mb-1 border-t dark:border-gray-700 max-w-fit pt-2" >
+                                <button
+                                    type="button"
+                                    className={`pb-1 cursor-pointer text-gray-400 hover:text-blue-500 ${currentUser && comment.likes.includes(currentUser._id) && '!text-blue-600'}`}
+                                    onClick={() => onLike(comment._id)}
+                                >
                                     <FaThumbsUp className="text-sm" />
                                 </button>
 
@@ -124,13 +123,23 @@ export default function Comment({ comment, onLike, onEdit }) {
 
                                 {
                                     currentUser && (currentUser._id === comment.userId || currentUser.isAdmin) && (
-                                        <button
-                                            type="button"
-                                            className="text-gray-400 hover:text-blue-500 cursor-pointer"
-                                            onClick={handleEdit}
-                                        >
-                                            Edit
-                                        </button>
+                                        <>
+                                            <button
+                                                type="button"
+                                                className="text-gray-400 hover:text-blue-500 cursor-pointer"
+                                                onClick={handleEdit}
+                                            >
+                                                Edit
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                className="text-gray-400 hover:text-red-500 cursor-pointer"
+                                                onClick={() => onDelete(comment._id)}
+                                            >
+                                                Delete
+                                            </button>
+                                        </>
                                     )
                                 }
                             </div>

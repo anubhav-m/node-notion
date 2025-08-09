@@ -131,3 +131,37 @@ export const editComment = async (req, res, next) => {
         next(err);
     }
 }
+
+export const deleteComment = async (req, res, next) => {
+    try {
+        const commentId = req.params.commentId;
+
+        if (!commentId) {
+            errorThrower(400, 'Comment ID is required');
+        }
+
+        const comment = await Comment.findById(commentId);
+
+        if (!comment) {
+            errorThrower(404, 'Comment not found');
+        }
+
+        const isOwner = req.user;
+        const isAdmin = req.user.isAdmin;
+
+        if (!isOwner && !isAdmin) {
+            errorThrower(403, 'Unauthorized - You cannot delete this comment');
+        }
+
+        await Comment.findByIdAndDelete(commentId);
+
+        res.status(200).json({
+            success: true,
+            message: 'Comment successfully deleted'
+        })
+    }
+
+    catch (err) {
+        next(err);
+    }
+}   
