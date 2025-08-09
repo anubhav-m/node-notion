@@ -1,16 +1,29 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Navbar, NavbarCollapse, NavbarLink, TextInput, Button, NavbarToggle, Dropdown, Avatar, DropdownHeader, DropdownItem, DropdownDivider } from 'flowbite-react'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { FaMoon, FaSun } from 'react-icons/fa'
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleTheme } from '../redux/theme/themeSlice'
 import { signOutStart, signOutSuccess, signOutFailure } from '../redux/user/userSlice';
+import { useEffect, useState } from 'react'
 
 export default function Header() {
     const path = useLocation().pathname;
     const { currentUser } = useSelector(state => state.user);
     const { theme } = useSelector(state => state.theme);
     const dispatch = useDispatch();
+    const [serachTerm, setSearchTerm] = useState('');
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search);
+        const searchTermFromUrl = urlParams.get('searchTerm');
+        if (searchTermFromUrl) {
+            setSearchTerm(searchTermFromUrl);
+        }
+
+    }, [location.search]);
 
     const handleSignOut = async () => {
         try {
@@ -34,6 +47,14 @@ export default function Header() {
         }
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const urlParams = new URLSearchParams(location.search);
+        urlParams.set('searchTerm', serachTerm);
+        const searchQuery = urlParams.toString();
+        navigate(`/search?${searchQuery}`);
+    }
+
     return (
         <Navbar>
             <Link to='/' className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'>
@@ -41,12 +62,14 @@ export default function Header() {
                 Notion
             </Link>
 
-            <form>
+            <form onSubmit={handleSubmit}>
                 <TextInput
                     type='text'
                     placeholder='Search...'
                     rightIcon={AiOutlineSearch}
                     className='hidden lg:inline'
+                    value={serachTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </form>
 
