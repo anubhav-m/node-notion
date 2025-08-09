@@ -49,3 +49,43 @@ export const getPostComments = async (req, res, next) => {
         next(err);
     }
 }
+
+export const likeComment = async(req, res, next) => {
+    try {
+        const commentId = req.params.commentId;
+        const user = req.user.id;
+
+        if (!commentId){
+            errorThrower(400, 'No commentId found');
+        }
+
+        const comment = await Comment.findById(commentId);
+
+        if (!comment){
+            errorThrower(404, 'No comment found by the given commentId');
+        }
+
+        const userIndex = comment.likes.indexOf(user);
+
+        if (userIndex === -1){
+            comment.numberOfLikes += 1;
+            comment.likes.push(user);
+        }
+        else{
+            comment.numberOfLikes -= 1;
+            comment.likes.splice(userIndex, 1);
+        }
+        
+        await comment.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Successfully updated count of likes",
+            comment
+        })
+    } 
+    
+    catch (err) {
+        next(err);
+    }
+}
