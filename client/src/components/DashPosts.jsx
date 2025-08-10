@@ -20,7 +20,16 @@ export default function DashPosts() {
             try {
                 dispatch(setError(false));
                 setLoadingPost(true);
-                const res = await fetch(`api/post/getPosts?userId=${currentUser._id}`);
+
+                let res;
+                if (currentUser.isAdmin) {
+                    res = await fetch(`api/post/getPosts`);
+                }
+
+                else {
+                    res = await fetch(`/api/post/getPosts/?userId=${currentUser._id}`);
+                }
+
                 const data = await res.json();
 
                 if (!data.success) {
@@ -80,11 +89,11 @@ export default function DashPosts() {
             const data = await res.json();
 
             if (!res.ok) {
-               throw new Error(data.message);
+                throw new Error(data.message);
             }
 
             else {
-                setUserPosts((prev)=>prev.filter((post)=>post._id!==postIdToDelete))
+                setUserPosts((prev) => prev.filter((post) => post._id !== postIdToDelete))
             }
         }
         catch (error) {
@@ -107,6 +116,8 @@ export default function DashPosts() {
                                 <Table hoverable className="shadow-md">
                                     <TableHead>
                                         <TableHeadCell>Date updated</TableHeadCell>
+                                        {currentUser.isAdmin && <TableHeadCell>User image</TableHeadCell>}
+                                        {currentUser.isAdmin && <TableHeadCell>Username</TableHeadCell>}
                                         <TableHeadCell>Post image </TableHeadCell>
                                         <TableHeadCell>Post title </TableHeadCell>
                                         <TableHeadCell>Category </TableHeadCell >
@@ -123,6 +134,18 @@ export default function DashPosts() {
                                                     <TableCell>
                                                         {new Date(post.updatedAt).toLocaleDateString()}
                                                     </TableCell>
+                                                    {currentUser.isAdmin &&
+                                                        <>
+                                                            <TableCell className="truncate">
+                                                                <img src={post.userId.profilePic} alt={post.userId.username} className="w-10 h-10 object-cover rounded-full bg-gray-500" referrerPolicy="no-referrer" />
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {post.userId.username}
+                                                            </TableCell>
+
+                                                        </>
+                                                    }
+
                                                     <TableCell>
                                                         <Link to={`/post/${post.slug}`}>
                                                             <img src={post.image} alt={post.title} className="w-20 h-10 object-cover bg-gray-500" />
@@ -137,10 +160,10 @@ export default function DashPosts() {
                                                         {post.category}
                                                     </TableCell>
                                                     <TableCell>
-                                                        <span onClick={() => { 
+                                                        <span onClick={() => {
                                                             setShowModal(true);
                                                             setPostIdToDelete(post._id);
-                                                         }} className="font-medium text-red-500 hover:underline cursor-pointer"> Delete</span>
+                                                        }} className="font-medium text-red-500 hover:underline cursor-pointer"> Delete</span>
                                                     </TableCell>
                                                     <TableCell>
                                                         <Link className="text-teal-500 hover:underline" to={`/update-post/${post._id}`}>

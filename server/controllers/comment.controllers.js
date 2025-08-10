@@ -26,7 +26,7 @@ export const createComment = async (req, res, next) => {
     }
 }
 
-export const getPostComments = async (req, res, next) => {
+export const getPostCommentByPostId = async (req, res, next) => {
     try {
         const postId = req.params.postId;
 
@@ -164,4 +164,38 @@ export const deleteComment = async (req, res, next) => {
     catch (err) {
         next(err);
     }
-}   
+}
+
+export const getComments = async (req, res, next) => {
+    try {
+        if (!req.user.isAdmin) {
+            errorThrower(403, 'Unauthorized - Only admins can access this route');
+        }
+
+        const startIndex = parseInt(req.query.startIndex) || 0;
+        const limit = parseInt(req.query.limit) || 9;
+        const sortDirection = req.query.sortDirection === 'desc' ? -1 : 1;
+
+        const comments = await Comment.find()
+            .populate('userId', 'username profilePic')
+            .sort({ createdAt: sortDirection})
+            .skip(startIndex)
+            .limit(limit);
+
+            const totalComments = await Comment.countDocuments();
+
+            const now = new Date();
+            const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+            const lastMonthComments = await Comment.countDocuments();
+
+        res.status(200).json({
+            success: true,
+            message: 'Successfully retrieved comments',
+            comments,
+            totalComments,
+            lastMonthComments
+        });
+    } catch (err) {
+        next(err);
+    }
+}

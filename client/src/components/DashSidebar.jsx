@@ -1,5 +1,5 @@
 import { Sidebar, SidebarItems, SidebarItemGroup, SidebarItem } from 'flowbite-react'
-import { HiArrowSmRight, HiDocumentText, HiUser, HiOutlineUserGroup } from 'react-icons/hi'
+import { HiArrowSmRight, HiDocumentText, HiUser, HiOutlineUserGroup, HiChartPie, HiAnnotation } from 'react-icons/hi'
 import { useLocation, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -43,8 +43,17 @@ export default function DashSidebar() {
         <Sidebar className='w-full md:w-56'>
             <SidebarItems>
                 <SidebarItemGroup className='flex flex-col gap-1'>
+
+                    {currentUser && currentUser.isAdmin &&
+                        <Link to='/dashboard?tab=dash'>
+                            <SidebarItem active={tab === 'dash' || !tab} icon={HiChartPie}as='div'>
+                                Dashboard
+                            </SidebarItem>
+                        </Link>
+                    }
+
                     <Link to='/dashboard?tab=profile'>
-                        <SidebarItem active={tab === 'profile'} icon={HiUser} label={currentUser.isAdmin?'Admin':'User'} labelColor='dark' as='div'>Profile</SidebarItem>
+                        <SidebarItem active={tab === 'profile'} icon={HiUser} label={currentUser.isAdmin ? 'Admin' : 'User'} labelColor='dark' as='div'>Profile</SidebarItem>
                     </Link>
 
                     {
@@ -54,10 +63,18 @@ export default function DashSidebar() {
                         </Link>
                     }
 
-                      {
-                        currentUser.isAdmin &&
+                    {
+                        currentUser && currentUser.isAdmin &&
                         <Link to='/dashboard?tab=users'>
                             <SidebarItem active={tab === 'users'} icon={HiOutlineUserGroup} as='div'>Users</SidebarItem>
+                        </Link>
+                    }
+
+                     {currentUser && currentUser.isAdmin &&
+                        <Link to='/dashboard?tab=comments'>
+                            <SidebarItem active={tab === 'dash'} icon={HiAnnotation}as='div'>
+                                Comments
+                            </SidebarItem>
                         </Link>
                     }
 

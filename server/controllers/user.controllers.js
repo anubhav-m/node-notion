@@ -141,7 +141,7 @@ export const getUsers = async (req, res, next) => {
             return rest;
         });
 
-        const totalUsers = await User.countDocuments;
+        const totalUsers = await User.countDocuments();
 
         const now = new Date();
 

@@ -86,11 +86,11 @@ export default function DashUsers() {
             const data = await res.json();
 
             if (!res.ok) {
-               throw new Error(data.message);
+                throw new Error(data.message);
             }
 
             else {
-                setUsers((prev)=>prev.filter((user)=>user._id!==userIdToDelete))
+                setUsers((prev) => prev.filter((user) => user._id !== userIdToDelete))
             }
         }
         catch (error) {
@@ -107,65 +107,70 @@ export default function DashUsers() {
                         <HashLoader className="text-center" color="aqua" size='50' loading={loadingUsers} />
                     </div>
                 ) : (
-                    currentUser && users.length > 0 ?
+                    currentUser.isAdmin ?
                         (
-                            <>
-                                <Table hoverable className="shadow-md">
-                                    <TableHead>
-                                        <TableHeadCell>Date created</TableHeadCell>
-                                        <TableHeadCell>User image </TableHeadCell>
-                                        <TableHeadCell>Username </TableHeadCell>
-                                        <TableHeadCell>Email </TableHeadCell>
-                                        <TableHeadCell>Admin </TableHeadCell >
-                                        <TableHeadCell>Delete</TableHeadCell >
-                                    </TableHead>
+                            users.length > 0 ? (
+                                <>
+                                    <Table hoverable className="shadow-md">
+                                        <TableHead>
+                                            <TableHeadCell>Date created</TableHeadCell>
+                                            <TableHeadCell>User image </TableHeadCell>
+                                            <TableHeadCell>Username </TableHeadCell>
+                                            <TableHeadCell>Email </TableHeadCell>
+                                            <TableHeadCell>Admin </TableHeadCell >
+                                            <TableHeadCell>Delete</TableHeadCell >
+                                        </TableHead>
 
 
-                                    <TableBody className="divide-y">
-                                        {
-                                            users.map((user) => (
+                                        <TableBody className="divide-y">
+                                            {
+                                                users.map((user) => (
 
-                                                <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                                                    <TableCell>
-                                                        {new Date(user.createdAt).toLocaleDateString()}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <img src={user.profilePic} alt={user.username} className="w-10 h-10 object-cover rounded-full bg-gray-500" referrerPolicy="no-referrer" />
-                                                    </TableCell>
-                                                    <TableCell className="truncate">
-                                                        {user.username}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {user.email}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {user.isAdmin ? (<FaCheck className='text-green-500'/>) : (<FaTimes className='text-red-500'/>) }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <span onClick={() => {
-                                                            setShowModal(true);
-                                                            setUserIdToDelete(user._id);
-                                                        }} className="font-medium text-red-500 hover:underline cursor-pointer"> Delete</span>
-                                                    </TableCell>
-                                                </TableRow>
+                                                    <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                                                        <TableCell>
+                                                            {new Date(user.createdAt).toLocaleDateString()}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <img src={user.profilePic} alt={user.username} className="w-10 h-10 object-cover rounded-full bg-gray-500" referrerPolicy="no-referrer" />
+                                                        </TableCell>
+                                                        <TableCell className="truncate">
+                                                            {user.username}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            {user.email}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            {user.isAdmin ? (<FaCheck className='text-green-500' />) : (<FaTimes className='text-red-500' />)}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <span onClick={() => {
+                                                                setShowModal(true);
+                                                                setUserIdToDelete(user._id);
+                                                            }} className="font-medium text-red-500 hover:underline cursor-pointer"> Delete</span>
+                                                        </TableCell>
+                                                    </TableRow>
 
-                                            ))
-                                        }
-                                    </TableBody>
-                                </Table>
+                                                ))
+                                            }
+                                        </TableBody>
+                                    </Table>
 
-                                {
-                                    showMore && (
-                                        <Button onClick={handleShowMore} className="mt-5 mx-auto cursor-pointer" color='blue' outline>
-                                            Show More
-                                        </Button>
-                                    )
-                                }
+                                    {
+                                        showMore && (
+                                            <Button onClick={handleShowMore} className="mt-5 mx-auto cursor-pointer" color='blue' outline>
+                                                Show More
+                                            </Button>
+                                        )
+                                    }
 
-                            </>
+                                </>
+                            ) : (
+                                <p className="text-center text-xl">No users found</p>
+                            )
+
 
                         ) : (
-                            <p className="text-center text-xl">No users found</p>
+                            <p className="text-center text-xl">403 - Unauthorized - Only admins can access this page</p>
                         )
                 )
             }

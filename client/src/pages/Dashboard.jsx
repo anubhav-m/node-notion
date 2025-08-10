@@ -4,6 +4,8 @@ import DashSidebar from '../components/DashSidebar.jsx';
 import DashProfile from '../components/DashProfile';
 import DashPosts from '../components/DashPosts.jsx';
 import DashUsers from '../components/DashUsers.jsx';
+import DashComp from '../components/DashboardComp.jsx';
+import DashComments from '../components/DashComments.jsx';
 
 export default function Dashboard() {
     const location = useLocation();
@@ -23,12 +25,16 @@ export default function Dashboard() {
             </div>
 
             <div className="w-full overflow-x-auto">
+                {/* Dashboard comp ...*/}
+                {tab === 'dash' && <DashComp />}
                 {/* Profile ... */}
                 {tab === 'profile' && <DashProfile />}
                 {/* Posts ... */}
                 {tab === 'posts' && <DashPosts />}
                 {/* Users ...*/}
                 {tab === 'users' && <DashUsers/>}
+                {/* Comments ...*/}
+                {tab === 'comments' && <DashComments />}
             </div>
 
         </div>

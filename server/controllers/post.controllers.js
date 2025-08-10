@@ -49,6 +49,7 @@ export const getPosts = async (req, res, next) => {
                 ]
             }),
         })
+            .populate('userId', 'username profilePic email')
             .sort({ updatedAt: sortDirection })
             .skip(startIndex)
             .limit(limit);
