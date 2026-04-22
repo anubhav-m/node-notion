@@ -101,7 +101,7 @@ export const SignIn = async (req, res, next) => {
 
         const { password: pass, ...rest } = validUser._doc;
 
-        res.status(200).cookie('access_token', token, { httpOnly: true }).json({
+        res.status(200).cookie('access_token', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }).json({
             success: true,
             message: 'User signed in successfully',
             user: rest
@@ -121,7 +121,7 @@ export const Google = async (req, res, next) => {
         if (user) {
             const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1d' });
             const { password, ...rest } = user._doc;
-            res.status(200).cookie('access_token', token, { httpOnly: true }).json({
+            res.status(200).cookie('access_token', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }).json({
                 success: true,
                 message: 'User signed in successfully',
                 user: rest
@@ -140,7 +140,7 @@ export const Google = async (req, res, next) => {
             await newUser.save();
             const token = jwt.sign({ id: newUser._id }, JWT_SECRET, { expiresIn: '1d' });
             const { password, ...rest } = newUser._doc;
-            res.status(201).cookie('access_token', token, { httpOnly: true }).json({
+            res.status(201).cookie('access_token', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }).json({
                 success: true,
                 message: 'User signed in successfully',
                 user: rest

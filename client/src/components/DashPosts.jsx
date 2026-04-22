@@ -23,7 +23,7 @@ export default function DashPosts() {
 
                 let res;
                 if (currentUser.isAdmin) {
-                    res = await fetch(`api/post/getPosts`);
+                    res = await fetch(`/api/post/getPosts`);
                 }
 
                 else {

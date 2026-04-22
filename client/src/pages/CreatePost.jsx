@@ -3,7 +3,7 @@ import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setError, clearError } from '../redux/user/userSlice.js';
+import { setError, clearError, signOutSuccess } from '../redux/user/userSlice.js';
 import { supabase } from '../supabase/supabaseClient.js'
 import { useNavigate } from 'react-router-dom'
 
@@ -97,6 +97,11 @@ export default function CreatePost() {
         } 
         
         catch (err) {
+            if (err.message && err.message.includes('Unauthorized')) {
+                dispatch(signOutSuccess());
+                navigate('/');
+                return;
+            }
             dispatch(setError(err.message || 'Something went wrong while publishing'));
         }
     }
