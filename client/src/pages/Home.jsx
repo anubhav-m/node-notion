@@ -10,7 +10,7 @@ export default function Home() {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const res = await fetch('/api/post/getPosts');
+                const res = await fetch('/api/post/getposts');
                 const data = await res.json();
 
                 if (!data.success) {

@@ -23,11 +23,11 @@ export default function DashPosts() {
 
                 let res;
                 if (currentUser.isAdmin) {
-                    res = await fetch(`/api/post/getPosts`);
+                    res = await fetch(`/api/post/getposts`);
                 }
 
                 else {
-                    res = await fetch(`/api/post/getPosts/?userId=${currentUser._id}`);
+                    res = await fetch(`/api/post/getposts?userId=${currentUser._id}`);
                 }
 
                 const data = await res.json();
@@ -58,7 +58,7 @@ export default function DashPosts() {
         const startIndex = userPosts.length;
 
         try {
-            const res = await fetch(`/api/post/getPosts/?userId=${currentUser._id}&startIndex=${startIndex}`);
+            const res = await fetch(`/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`);
             const data = await res.json();
 
             if (!data.success) {
