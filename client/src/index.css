@@ -5,34 +5,46 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-.post-content p{
-    @apply mb-2
+.post-content p {
+    @apply mb-4 leading-relaxed;
 }
 
-.post-content h1{
-    @apply text-3xl font-sans font-bold mb-2
+.post-content h1 {
+    @apply text-3xl font-bold mb-4 mt-6;
 }
 
-.post-content h2{
-    @apply text-2xl font-sans mb-2
+.post-content h2 {
+    @apply text-2xl font-bold mb-3 mt-5;
 }
 
-.post-content h3{
-    @apply text-xl font-sans mb-2
+.post-content h3 {
+    @apply text-xl font-bold mb-2 mt-4;
 }
 
-.post-content a{
-    @apply text-blue-500 no-underline dark:text-red-500 hover:underline
+.post-content a {
+    @apply text-teal-500 hover:underline;
 }
 
-.post-content li[data-list="bullet"]{
-    @apply list-disc ml-8
+.post-content ul {
+    @apply list-disc ml-8 mb-4;
 }
 
-.post-content li[data-list="ordered"]{
-    @apply list-decimal ml-8
+.post-content ol {
+    @apply list-decimal ml-8 mb-4;
 }
 
+.post-content blockquote {
+    @apply border-l-4 border-gray-300 pl-4 italic my-4;
+}
 
+.post-content pre {
+    @apply bg-gray-100 dark:bg-gray-800 p-4 rounded-md overflow-x-auto my-4 relative;
+}
 
+.copy-button {
+    @apply absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-xs px-2 py-1 rounded transition-all cursor-pointer;
+}
 
+.post-content code {
+    @apply bg-gray-100 dark:bg-gray-800 px-1 rounded;
+}

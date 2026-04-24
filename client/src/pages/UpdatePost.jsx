@@ -1,11 +1,11 @@
-import { TextInput, Select, FileInput, Alert, Spinner } from 'flowbite-react'
-import ReactQuill from 'react-quill-new';
-import 'react-quill-new/dist/quill.snow.css';
+import { TextInput, Select, FileInput, Alert, Spinner, Textarea } from 'flowbite-react'
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setError, clearError } from '../redux/user/userSlice.js';
 import { supabase } from '../supabase/supabaseClient.js'
 import { useNavigate, useParams } from 'react-router-dom'
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 
 
 export default function UpdatePost() {
@@ -14,7 +14,7 @@ export default function UpdatePost() {
     const [formData, setFormData] = useState({
         title: '',
         content: '',
-        category: 'uncaategorised'
+        category: 'uncategorized'
     });
     const dispatch = useDispatch();
     const [imageFile, setImageFile] = useState(null);
@@ -100,7 +100,7 @@ export default function UpdatePost() {
         try {
             console.log(formData);
             //Validation
-            if (!formData.title.trim() || !formData.content.trim() || !formData.content.trim()) {
+            if (!formData.title?.trim() || !formData.content?.trim()) {
                 throw new Error('Please fill all the required fields');
             }
             //
@@ -130,13 +130,13 @@ export default function UpdatePost() {
     }
 
     return (
-        <div className="flex-1 w-full md:max-w-5xl self-center px-6">
+        <div className="flex-1 w-full md:max-w-6xl self-center px-6">
             <h1 className="text-center text-3xl my-7 font-semibold">Update Post</h1>
 
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                 <div className="flex flex-col md:flex-row gap-4 justify-between mb-5">
                     <TextInput type='text' placeholder='Title' id='title' className='flex-3' required onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} value={formData.title}/>
-                    <Select className='flex-1' onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} value={formData.category}>
+                    <Select className='flex-1' onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))} value={formData.category}>
                         <option value="uncategorized">Select a category</option>
                         <option value="javascript">JavaScript</option>
                         <option value="reactjs">React.js</option>
@@ -180,7 +180,39 @@ export default function UpdatePost() {
                     )
                 }
 
-                <ReactQuill theme='snow' className='h-72 mb-15' required onChange={(value) => setFormData(prev => ({ ...prev, content: value }))} value={formData.content}/>
+                <div className="flex flex-col md:flex-row gap-4 mb-15">
+                    <div className="flex-1">
+                        <h2 className="text-sm font-semibold mb-2 text-gray-500 italic">Markdown Editor</h2>
+                        <Textarea
+                            placeholder='Write something...'
+                            className='h-72'
+                            required
+                            onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                            value={formData.content}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Tab') {
+                                    e.preventDefault();
+                                    const { selectionStart, selectionEnd, value } = e.target;
+                                    const newValue = value.substring(0, selectionStart) + '    ' + value.substring(selectionEnd);
+                                    setFormData(prev => ({ ...prev, content: newValue }));
+                                    setTimeout(() => {
+                                        e.target.selectionStart = e.target.selectionEnd = selectionStart + 4;
+                                    }, 0);
+                                }
+                            }}
+                        />
+                    </div>
+                    
+                    <div className="flex-1">
+                        <h2 className="text-sm font-semibold mb-2 text-gray-500 italic">Live Preview</h2>
+                        <div 
+                            className='h-72 p-4 border border-gray-300 dark:border-gray-600 rounded-lg overflow-y-auto post-content bg-gray-50 dark:bg-gray-800'
+                            dangerouslySetInnerHTML={{
+                                __html: DOMPurify.sanitize(marked.parse(formData.content || ''))
+                            }}
+                        />
+                    </div>
+                </div>
 
                 <button className="cursor-pointer relative inline-flex items-center justify-center p-0.5 mb-15 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800" type='submit'>
                     <span className="w-full relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">

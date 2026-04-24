@@ -3,6 +3,8 @@ import { useParams, Link } from "react-router-dom"
 import { HashLoader } from 'react-spinners'
 import { Button } from "flowbite-react";
 import CommentSection from "../components/CommentsSection.jsx"
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 
 export default function PostPage() {
     const { postSlug } = useParams();
@@ -36,6 +38,31 @@ export default function PostPage() {
         fetchPost();
     }, [postSlug]);
 
+    useEffect(() => {
+        const codeBlocks = document.querySelectorAll('.post-content pre');
+        codeBlocks.forEach((block) => {
+            if (block.querySelector('.copy-button')) return;
+
+            const button = document.createElement('button');
+            button.innerText = 'Copy';
+            button.className = 'copy-button';
+
+            button.onclick = () => {
+                const code = block.querySelector('code').innerText;
+                navigator.clipboard.writeText(code).then(() => {
+                    button.innerText = 'Copied!';
+                    button.classList.add('bg-green-500', 'text-white');
+                    setTimeout(() => {
+                        button.innerText = 'Copy';
+                        button.classList.remove('bg-green-500', 'text-white');
+                    }, 2000);
+                });
+            };
+
+            block.appendChild(button);
+        });
+    }, [post]);
+
     return (
         <div className="flex-1 flex flex-col p-3">
             {
@@ -59,7 +86,12 @@ export default function PostPage() {
                                 </div>
                             </div>
 
-                            <div dangerouslySetInnerHTML={{__html: post && post.content}} className="p-2 max-w-2xl mx-auto w-full my-7 post-content"></div>
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: post && DOMPurify.sanitize(marked.parse(post.content))
+                                }}
+                                className="p-2 max-w-2xl mx-auto w-full my-7 post-content"
+                            ></div>
 
                             <CommentSection postId={post._id} />
                         </>
