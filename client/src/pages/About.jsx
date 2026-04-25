@@ -11,43 +11,40 @@ export default function About() {
             className='w-40 h-40 rounded-full object-cover border-4 border-teal-500 shadow-2xl mb-8 transform hover:scale-105 transition-transform duration-300'
           />
           <h1 className='text-4xl font-semibold text-center my-7 text-gray-800 dark:text-white'>
-            About NodeNotion
+            Hi, I'm Anubhav
           </h1>
-          <div className='text-md text-gray-600 dark:text-gray-400 flex flex-col gap-6 leading-relaxed'>
-            <p>
-              Welcome to NodeNotion! This project was created by Anubhav
-              as a personal project to share his thoughts and ideas with the
-              world. Anubhav is a passionate developer who loves to write about
-              technology, coding, and everything in between.
-            </p>
 
-            <p>
-              Here, you'll find weekly articles and tutorials on topics
-              such as web development, software engineering, and programming
-              languages. Anubhav is always learning and exploring new
-              technologies, so be sure to check back often for new content!
-            </p>
+          <div className='flex flex-col gap-10 items-center'>
+            <div className='text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed text-center max-w-xl'>
+              <p>
+                I am a passionate software developer who finds joy in turning complex problems
+                into elegant, functional code. NodeNotion is my personal digital garden, a space
+                where I share my journey, insights, and everything I'm discovering in the
+                ever-evolving world of technology.
+              </p>
+            </div>
 
-            <p>
-              We encourage you to leave comments on our posts and engage with
-              other readers. You can like other people's comments and reply to
-              them as well. We believe that a community of learners can help
-              each other grow and improve.
-            </p>
+            <div className='relative py-6 px-4'>
+              <span className='absolute top-0 left-0 text-6xl text-teal-500/20 font-serif leading-none'>"</span>
+              <blockquote className='text-2xl font-medium italic font-serif text-gray-800 dark:text-gray-200 max-w-lg text-center relative z-10'>
+                Still learning. Still building. Still improving.
+              </blockquote>
+              <span className='absolute bottom-0 right-0 text-6xl text-teal-500/20 font-serif leading-none'>"</span>
+            </div>
           </div>
-          
+
           <div className='flex items-center gap-6 mt-10'>
-            <a 
-              href="https://github.com/anubhav-m/" 
-              target="_blank" 
+            <a
+              href="https://github.com/anubhav-m/"
+              target="_blank"
               rel="noopener noreferrer"
               className='text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all duration-300 transform hover:scale-110'
             >
               <FaGithub className='text-4xl' />
             </a>
-            <a 
-              href="https://www.linkedin.com/in/anubhav--m/" 
-              target="_blank" 
+            <a
+              href="https://www.linkedin.com/in/anubhav--m/"
+              target="_blank"
               rel="noopener noreferrer"
               className='text-gray-600 dark:text-gray-400 hover:text-[#0077b5] transition-all duration-300 transform hover:scale-110'
             >

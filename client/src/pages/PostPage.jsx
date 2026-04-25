@@ -78,9 +78,9 @@ export default function PostPage() {
                                 <Button color='gray' pill size='xs' className="cursor-pointer hover:text-blue-400">{post.category}</Button>
                             </Link>
 
-                            <div className="self-center">
-                                <img src={post.image} alt={post.title} className="mt-7 p-3 max-h-[600px] max-w-5xl object-cover items-center" />
-                                <div className="flex justify-between p-3 border-b border-slate-500 text-xs max-w-5xl">
+                            <div className="flex flex-col items-center">
+                                <img src={post.image} alt={post.title} className="mt-7 p-3 max-h-[600px] w-full max-w-5xl object-cover" />
+                                <div className="flex justify-between p-3 border-b border-slate-500 text-xs w-full max-w-5xl mx-auto">
                                     <span className="">{new Date(post.createdAt).toLocaleDateString()}</span>
                                     <span className="italic">{(post.content.length / 1000).toFixed(0)} mins read</span>
                                 </div>

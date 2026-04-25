@@ -17,35 +17,24 @@ export default function FooterComp() {
                         <div>
                             <FooterTitle title='About' />
                             <FooterLinkGroup col>
-                                <FooterLink as={Link} to="/about" target="_blank" rel="noopener noreferer">
-                                    About the project
-                                </FooterLink>
-                                <FooterLink href="https://github.com/anubhav-m" target="_blank" rel="noopener noreferer">
+                                <FooterLink as={Link} to="/about">
                                     About the creator
                                 </FooterLink>
                             </FooterLinkGroup>
                         </div>
 
                         <div>
-                            <FooterTitle title='Follow Us' />
+                            <FooterTitle title='Follow Me' />
                             <FooterLinkGroup col>
                                 <FooterLink href="https://github.com/anubhav-m/node-notion" target="_blank" rel="noopener noreferer">
                                     Github
                                 </FooterLink>
+                                <FooterLink href="https://www.linkedin.com/in/anubhav--m/" target="_blank" rel="noopener noreferer">
+                                    LinkedIn
+                                </FooterLink>
                             </FooterLinkGroup>
                         </div>
 
-                        <div>
-                            <FooterTitle title='Legal' />
-                            <FooterLinkGroup col>
-                                <FooterLink as={Link} to="/#" target="_blank" rel="noopener noreferer">
-                                    Privacy Policy
-                                </FooterLink>
-                                <FooterLink as={Link} to="/#" target="_blank" rel="noopener noreferer">
-                                    Terms & Conditions
-                                </FooterLink>
-                            </FooterLinkGroup>
-                        </div>
                     </div>
                 </div>
             </div>

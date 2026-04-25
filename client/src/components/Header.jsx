@@ -148,9 +148,6 @@ export default function Header() {
                 <NavbarLink active={path === "/about"} as={Link} to='/about'>
                     About
                 </NavbarLink>
-                <NavbarLink active={path === "/projects"} as={Link} to='/projects'>
-                    Projects
-                </NavbarLink>
             </NavbarCollapse>
 
 
