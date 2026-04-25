@@ -3,6 +3,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://node-notion.onrender.com/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }
