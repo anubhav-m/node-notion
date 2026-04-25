@@ -72,10 +72,11 @@ export default function DashSidebar() {
 
                      {currentUser && currentUser.isAdmin &&
                         <Link to='/dashboard?tab=comments'>
-                            <SidebarItem active={tab === 'dash'} icon={HiAnnotation}as='div'>
+                            <SidebarItem active={tab === 'comments'} icon={HiAnnotation}as='div'>
                                 Comments
                             </SidebarItem>
                         </Link>
+
                     }
 
                 </SidebarItemGroup>
