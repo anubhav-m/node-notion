@@ -2,6 +2,8 @@ import bcrypt from "bcryptjs";
 import { errorThrower, errorSetter } from "../utils/error.js"
 import User from "../models/user.models.js";
 import { Post } from '../models/post.models.js';
+import { Comment } from '../models/comment.models.js';
+
 
 export const updateUser = async (req, res, next) => {
 
@@ -95,7 +97,9 @@ export const deleteUser = async (req, res, next) => {
         }
 
         await Post.deleteMany({userId: req.user.id})
+        await Comment.deleteMany({userId: req.params.id})
         await User.findByIdAndDelete(req.params.id);
+
 
         res.status(200).json({
             success: true,

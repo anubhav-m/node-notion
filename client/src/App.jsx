@@ -14,12 +14,14 @@ import ResetOnNavigate from "./components/ResetOnNavigate";
 import PostPage from './pages/PostPage.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import Search from './pages/Search.jsx'
-
+import AuthHandler from './components/AuthHandler.jsx'
 
 export default function App() {
 	return (
 		<BrowserRouter>
+			<AuthHandler />
 			<ScrollToTop />
+
 			<ResetOnNavigate>
 				<div className="min-h-screen flex flex-col">
 					<Header />
@@ -31,10 +33,10 @@ export default function App() {
 						<Route path='/search' element={<Search />}></Route>
 						<Route element={<PrivateRoute />}>
 							<Route path='/dashboard' element={<Dashboard />}></Route>
+							<Route path='/create-post' element={<CreatePost />}></Route>
+							<Route path='/update-post/:postId' element={<UpdatePost />}></Route>
 						</Route>
 						<Route path='/post/:postSlug' element={<PostPage />}></Route>
-						<Route path='/create-post' element={<CreatePost />}></Route>
-						<Route path='/update-post/:postId' element={<UpdatePost />}></Route>
 						{/* <Route element={<OnlyAdminPrivateRoute />}>
 							
 						</Route> */}
