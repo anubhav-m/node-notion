@@ -1,7 +1,8 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Navbar, NavbarCollapse, NavbarLink, TextInput, Button, NavbarToggle, Dropdown, Avatar, DropdownHeader, DropdownItem, DropdownDivider } from 'flowbite-react'
 import { AiOutlineSearch } from 'react-icons/ai'
-import { FaMoon, FaSun } from 'react-icons/fa'
+import { FaMoon, FaSun, FaGithub } from 'react-icons/fa'
+
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleTheme } from '../redux/theme/themeSlice'
 import { signOutStart, signOutSuccess, signOutFailure } from '../redux/user/userSlice';
@@ -57,10 +58,22 @@ export default function Header() {
 
     return (
         <Navbar>
-            <Link to='/' className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'>
-                <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>Node</span>
-                Notion
-            </Link>
+            <div className='flex items-center gap-2'>
+                <Link to='/' className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'>
+                    <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>Node</span>
+                    Notion
+                </Link>
+                <a 
+                    href='https://github.com/anubhav-m/node-notion' 
+                    target='_blank' 
+                    rel='noopener noreferrer'
+                    className='text-gray-500 hover:text-indigo-500 dark:hover:text-indigo-400 transition-all duration-300 transform hover:scale-110'
+                    title='Fork on GitHub'
+                >
+                    <FaGithub className='w-6 h-6' />
+                </a>
+            </div>
+
 
             <form onSubmit={handleSubmit}>
                 <TextInput
