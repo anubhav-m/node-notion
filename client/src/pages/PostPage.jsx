@@ -74,9 +74,15 @@ export default function PostPage() {
                     post && (
                         <>
                             <h1 className="text-3xl m-6 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl">{post.title}</h1>
-                            <Link to={`/search?category=${post.category}`} className="self-center">
-                                <Button color='gray' pill size='xs' className="cursor-pointer hover:text-blue-400">{post.category}</Button>
-                            </Link>
+                            <div className="flex flex-col items-center justify-center gap-4 mt-5">
+                                <Link to={`/search?category=${post.category}`}>
+                                    <Button color='gray' pill size='xs' className="cursor-pointer hover:text-blue-400">{post.category}</Button>
+                                </Link>
+                                <div className="flex items-center gap-2">
+                                    <img src={post.userId?.profilePic} alt={post.userId?.username} className="h-10 w-10 rounded-full object-cover border-2 border-teal-500" />
+                                    <span className="font-semibold text-sm">@{post.userId?.username}</span>
+                                </div>
+                            </div>
 
                             <div className="flex flex-col items-center">
                                 <img src={post.image} alt={post.title} className="mt-7 p-3 max-h-[600px] w-full max-w-5xl object-cover" />

@@ -77,7 +77,17 @@ export default function Header() {
                 <AiOutlineSearch />
             </Button>
 
-            <div className='flex gap-2 md:order-1'>
+            <div className='flex gap-2 md:order-1 items-center'>
+                {currentUser && (
+                    <Link to='/create-post' className="hidden sm:inline">
+                        <button className="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 cursor-pointer">
+                            <span className="relative px-3 py-2 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">
+                                Create Post
+                            </span>
+                        </button>
+                    </Link>
+                )}
+
                 <Button className='w-14 h-10 hidden sm:inline cursor-pointer' color="light" pill onClick={() => dispatch(toggleTheme())}>
                     {
                         theme === 'light' ? <FaSun /> : <FaMoon />
