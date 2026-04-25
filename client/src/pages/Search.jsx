@@ -2,6 +2,7 @@ import { Button, Select, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PostCard from '../components/PostCard';
+import PostCardSkeleton from '../components/PostCardSkeleton';
 
 export default function Search() {
     const [sidebarData, setSidebarData] = useState({
@@ -160,7 +161,11 @@ export default function Search() {
                     {!loading && posts.length === 0 && (
                         <p className='text-xl text-gray-500'>No posts found.</p>
                     )}
-                    {loading && <p className='text-xl text-gray-500'>Loading...</p>}
+                    {loading && (
+                        Array.from({ length: 9 }).map((_, index) => (
+                            <PostCardSkeleton key={index} />
+                        ))
+                    )}
                     {!loading &&
                         posts &&
                         posts.map((post) => <PostCard key={post._id} post={post} />)}
