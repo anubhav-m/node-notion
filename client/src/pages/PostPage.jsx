@@ -5,12 +5,14 @@ import { Button } from "flowbite-react";
 import CommentSection from "../components/CommentsSection.jsx"
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
+import PostCard from "../components/PostCard";
 
 export default function PostPage() {
     const { postSlug } = useParams();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [post, setPost] = useState(null);
+    const [recentPosts, setRecentPosts] = useState(null);
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -37,6 +39,21 @@ export default function PostPage() {
         }
         fetchPost();
     }, [postSlug]);
+
+    useEffect(() => {
+        const fetchRecentPosts = async () => {
+            try {
+                const res = await fetch(`/api/post/getposts?limit=3`);
+                const data = await res.json();
+                if (res.ok) {
+                    setRecentPosts(data.posts);
+                }
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
+        fetchRecentPosts();
+    }, []);
 
     useEffect(() => {
         const codeBlocks = document.querySelectorAll('.post-content pre');
@@ -99,7 +116,16 @@ export default function PostPage() {
                                 className="p-2 max-w-2xl mx-auto w-full my-7 post-content"
                             ></div>
 
+                            <div className='flex flex-col justify-center items-center mb-5'>
+                                <h1 className='text-xl mt-5'>Recent articles</h1>
+                                <div className='flex flex-wrap gap-5 mt-5 justify-center'>
+                                    {recentPosts &&
+                                        recentPosts.map((post) => <PostCard key={post._id} post={post} />)}
+                                </div>
+                            </div>
+
                             <CommentSection postId={post._id} />
+
                         </>
                     )
                 )
